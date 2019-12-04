@@ -1,0 +1,16 @@
+{% extends "base.html"%}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flasky - 登录{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h4>登录</h4>
+</div>
+{% if nodata %}
+<div>查无此人，请联系管理员</div>
+{% endif %}
+<div class="col-md-4">
+    {{ wtf.quick_form(form) }}
+</div>
+{% endblock %}
