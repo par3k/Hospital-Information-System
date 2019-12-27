@@ -1,364 +1,219 @@
-from . import db
-# 对应的关系表 比如1-男 0-女 0-普通 1-副主治 2-主治 3-专家等写死还是创建表
+# -*- coding: utf-8 -*-
+from flask_login import UserMixin
 
+from . import db, login_manager
 
-class UserGroup(db.Model):
-    __tablename__ = 'usergroup'
-    id = db.Column(db.Integer, primary_key=True)  # 每个用户记得添加用户组
-    name = db.Column(db.String(64))
+@login_manager.user_loader
+def load_user(user_id):
 
+    return Patient.query.get(user_id)
 
-class UserInfo(db.Model):  # 医生，管理员，院长一张表
-    __tablename__ = 'userinfo'
-    id = db.Column(db.String(64), primary_key=True)  # 身份证号
-    name = db.Column(db.String(64))
-    sex = db.Column(db.Integer)
-    rank = db.Column(db.Integer)  # 0-普通 1-副主治 2-主治 3-专家
-    password = db.Column(db.String(64))
-    groupid = db.Column(db.Integer, db.ForeignKey('usergroup.id'))
-    ismenzhen = db.Column(db.Boolean)
-    iszhuyuan = db.Column(db.Boolean)
-    isjiating = db.Column(db.Boolean)
-    isjizhen = db.Column(db.Boolean)
-    isshoufei = db.Column(db.Boolean)
-    isguahao = db.Column(db.Boolean)
+class Patient(db.Model, UserMixin):
+    __tablename__ = 'patient'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    name = db.Column(db.CHAR(20))
+    gender = db.Column(db.CHAR(10))
+    birthDay = db.Column(db.DATE)
+    phoneNumber = db.Column(db.CHAR(50))
+    email = db.Column(db.CHAR(120))
+    address = db.Column(db.CHAR(20))
+    password = db.Column(db.VARCHAR(100))
 
+    hsprefer = db.relationship('Hspapply', backref='patient')
+    postrefer = db.relationship('Post', backref='patient')
+    reservationrefer = db.relationship('Reservation', backref='patient')
+    prescriptionrefer = db.relationship('Prescription', backref='patient')
+    hospitalizationrefer = db.relationship('Hospitalization', backref='patient')
+    nursingrefer = db.relationship('Nursing', backref='patient')
 
-class HospitalConstuct(db.Model):
-    __tablename__ = 'hospitalconstuct'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-    hospitalclass = db.relationship(
-        'HospitalClass', backref='itsclasss', lazy='dynamic')
+class MedicalStaff(db.Model):
+    __tablename__ = 'medicalstaff'
+    StaffID = db.Column(db.CHAR(4), primary_key=True)
+    name = db.Column(db.CHAR(20))
+    gender = db.Column(db.CHAR(10))
+    department_ID = db.Column(db.CHAR(3), db.ForeignKey('department.department_ID'), nullable=True)
+    entryDay = db.Column(db.DATE)
+    retirementDate = db.Column(db.DATE)
+    phoneNumber = db.Column(db.CHAR(11))
+    officeNo = db.Column(db.CHAR(10))
+    position = db.Column(db.CHAR(20))
+    email = db.Column(db.CHAR(20))
+    salary = db.Column(db.Integer)
+    password = db.Column(db.VARCHAR(100))
+    status = db.Column(db.CHAR(20))
 
+    hsprefer = db.relationship('Hspapply', backref='medicalstaff')
+    postrefer = db.relationship('Post', backref='medicalstaff')
+    warehouserefer = db.relationship('Warehouse', backref='medicalstaff')
+    reservationrefer = db.relationship('Reservation', backref='medicalstaff')
+    hospitalizationrefer = db.relationship('Hospitalization', backref='medicalstaff')
+    prescriptionrefer = db.relationship('Prescription', backref='medicalstaff')
+    nursingrefer = db.relationship('Nursing', backref='medicalstaff')
+    schedualrefer = db.relationship('Schedule', backref='medicalstaff')
+#
+class Department(db.Model):
+    __tablename__ = 'department'
+    department_ID = db.Column(db.CHAR(3), primary_key=True)
+    departmentName = db.Column(db.CHAR(30))
+    doctor_ID = db.Column(db.CHAR(4), nullable=True)
+    nurse_ID = db.Column(db.CHAR(4), nullable=True)
 
-class HospitalClass(db.Model):
-    __tablename__ = 'hospitalclass'
-    id = db.Column(db.String(64), primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-    # date = db.Column(db.String(128))
-    cid = db.Column(db.Integer, db.ForeignKey('hospitalconstuct.id'))
-    # 时间跟着医生走，需要一张类似于选课，医生与科室的视图（工作时间）。防止时间冲突
-
-
-class PatientInfo(db.Model):
-    __tablename__ = 'patientinfo'
-    id = db.Column(db.String(64), primary_key=True)  # 身份证号
-    name = db.Column(db.String(64))
-    birth = db.Column(db.Date)
-    sex = db.Column(db.Integer)  # 1-男 0-女
-    age = db.Column(db.Integer)
-
-class DoctorTimetable(db.Model):
-    __tablename__ = 'doctortimetable'
-    id = db.Column(db.String(64), primary_key=True)
-    doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-    doctortime = db.Column(db.Integer)
-    cid = db.Column(db.String(64), db.ForeignKey('hospitalclass.id'))
-
-class ImgDoctorTimetable(db.Model):
-    __tablename__ = 'imgdoctortimetable'
-    id = db.Column(db.String(64), primary_key=True)
-    doctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-    doctortime = db.Column(db.Integer)
-
-
-class ExpertsTimetable(db.Model):
-    __tablename__ = 'expertstimetable'
-    id = db.Column(db.Integer, primary_key=True)
-    userinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-    cid = db.Column(db.String(64), db.ForeignKey('hospitalclass.id'))
-    date = db.Column(db.Integer)
-
+    wardrefer = db.relationship('Ward', backref='department')
+    depart = db.relationship("MedicalStaff", backref="department")
 
 class Medicine(db.Model):
     __tablename__ = 'medicine'
-    id = db.Column(db.String(128), primary_key=True)  # 6位，1开头，自增
-    medicineclass = db.Column(db.Integer)  # 药品类别， 0代表中药， 1代表西药
-    medicinename = db.Column(db.String(128))
+    medicineID = db.Column(db.CHAR(3), primary_key=True)
+    m_name = db.Column(db.CHAR(20))
+    company = db.Column(db.CHAR(20))
+    price = db.Column(db.Integer)
+    warehouse_ID = db.Column(db.CHAR(2), db.ForeignKey("warehouse.warehouseID"))
+    inDate = db.Column(db.DATE)
+    expireDate = db.Column(db.DATE)
+    stock = db.Column(db.Integer)
+    description = db.Column(db.VARCHAR(1000))
+
+    prerefer = db.relationship('Prescription_Detail', backref='medicine')
+
+    def to_json(self):
+        json_medicine = {
+            'medicineID': self.medicineID,
+            'name': self.m_name,
+            'company': self.company,
+            'price': self.price,
+            'warehouse_ID': self.warehouse_ID,
+            'inDate': self.inDate.strftime('%Y-%m-%d'),
+            'expireDate': self.expireDate.strftime('%Y-%m-%d'),
+            'stock': self.stock,
+            'description': self.description
+        }
+        return json_medicine
+
+class Warehouse(db.Model):
+    __tablename__ = 'warehouse'
+    warehouseID=db.Column(db.CHAR(2), primary_key=True)
+    warehouseadmin_ID = db.Column(db.CHAR(4), db.ForeignKey("medicalstaff.StaffID"))
+
+    medicinerefer = db.relationship('Medicine', backref='warehouse')
+
+class Reservation(db.Model):
+    __tablename__ = 'reservation'
+    reservationID = db.Column(db.CHAR(4), primary_key=True)
+    doctor_ID = db.Column(db.CHAR(4), db.ForeignKey("medicalstaff.StaffID"))
+    id = db.Column(db.Integer, db.ForeignKey("patient.id"))
+    reservationDate = db.Column(db.DATE)
+    reservationTime = db.Column(db.CHAR(2))
+    description = db.Column(db.VARCHAR(100))
+
+class Prescription(db.Model):
+    __tablename__ = 'prescription'
+    prescriptionID = db.Column(db.CHAR(5), primary_key=True)
+    doctor_ID = db.Column(db.CHAR(4), db.ForeignKey("medicalstaff.StaffID"))
+    id = db.Column(db.Integer, db.ForeignKey("patient.id"))
+    prescriptionDate = db.Column(db.DATE)
+    paymentStatues = db.Column(db.CHAR(1))
+    giveStatues = db.Column(db.CHAR(1))
+
+class Prescription_Detail(db.Model):
+    __tablename__ = 'prescription_detail'
+    prescriptionID = db.Column(db.CHAR(5), primary_key=True)
+    medicine_ID = db.Column(db.CHAR(3),  db.ForeignKey("medicine.medicineID"), primary_key=True)
+    quantity = db.Column(db.Integer)
+
+    def to_json(self):
+        json_prescription = {
+            'mid':  self.medicine_ID,
+            'name': self.medicine.m_name,
+            'price': self.medicine.price,
+            'quantity': self.quantity
+        }
+        return json_prescription
 
 
-class CheckClass(db.Model):
-    __tablename__ = 'checkclass'
-    id = db.Column(db.Integer, primary_key=True)
-    checkcname = db.Column(db.String(64))
+class Ward(db.Model):
+    __tablename__ = 'ward'
+    wardNo = db.Column(db.CHAR(10), primary_key=True, index=True)
+    capacity = db.Column(db.Integer)
+    department_ID = db.Column(db.CHAR(3), db.ForeignKey("department.department_ID"))
+    bedrefer = db.relationship('Bed', backref='ward')
+
+class Bed(db.Model):
+    __tablename__ = 'bed'
+    bedNo = db.Column(db.CHAR(4), primary_key=True)
+    ward_No = db.Column(db.CHAR(10), db.ForeignKey("ward.wardNo"))
+    price = db.Column(db.Integer)
+
+    hospitalizationrefer = db.relationship('Hospitalization', backref='bed')
+
+class Hospitalization(db.Model):
+    __tablename__ = 'hospitalization'
+    bedNo = db.Column(db.CHAR(4), db.ForeignKey("bed.bedNo"), nullable=True)
+    id = db.Column(db.Integer, db.ForeignKey("patient.id"), primary_key=True)
+    doctor_ID = db.Column(db.CHAR(4), db.ForeignKey("medicalstaff.StaffID"))
+    nurse_ID = db.Column(db.CHAR(4))
+    startDate = db.Column(db.DATE,primary_key=True)
+    endDate = db.Column(db.DATE)
+    transferHospital = db.Column(db.CHAR(50))
+
+class Nursing(db.Model):
+    __tablename__ = 'nursing'
+    id = db.Column(db.Integer, db.ForeignKey("patient.id"), primary_key=True)
+    nurseID = db.Column(db.CHAR(4), db.ForeignKey("medicalstaff.StaffID"), primary_key=True)
+    date = db.Column(db.DATE, primary_key=True)
+    conditionDesc = db.Column(db.VARCHAR(200))
+
+    def to_json(self):
+        json_condition = {
+            'patientid':  self.id,
+            'nurseid': self.nurseID,
+            'date': self.date.strftime('%Y-%m-%d'),
+            'condition': self.conditionDesc
+        }
+        return json_condition
+
+class Schedule(db.Model):
+    __tablename__ = 'schedule'
+    staff_ID = db.Column(db.CHAR(4), db.ForeignKey("medicalstaff.StaffID"), primary_key=True)
+    date = db.Column(db.DATE, primary_key=True)
+    timeInterval8 = db.Column(db.CHAR(1))
+    timeInterval9 = db.Column(db.CHAR(1))
+    timeInterval10 = db.Column(db.CHAR(1))
+    timeInterval11 = db.Column(db.CHAR(1))
+    timeInterval14 = db.Column(db.CHAR(1))
+    timeInterval15 = db.Column(db.CHAR(1))
+    timeInterval16 = db.Column(db.CHAR(1))
+    timeInterval17 = db.Column(db.CHAR(1))
+
+class Hspapply(db.Model):
+    __tablename__ = 'hspapply'
+    hspid=db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.Integer, db.ForeignKey("patient.id"))
+    doctor_ID = db.Column(db.CHAR(4), db.ForeignKey("medicalstaff.StaffID"))
+    applyDate = db.Column(db.DATE)
+    arrangeStatus=db.Column(db.CHAR(1),default='n')
+
+class Post(db.Model):
+    __tablename__ = 'post'
+    postid = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    staff_ID = db.Column(db.CHAR(4), db.ForeignKey("medicalstaff.StaffID"))
+    id = db.Column(db.Integer, db.ForeignKey("patient.id"), nullable=True)
+    tostaff_ID = db.Column(db.CHAR(4))
+    iaAll = db.Column(db.CHAR(1))
+    postDate = db.Column(db.DATE)
+    postContent = db.Column(db.CHAR(200))
+    postTitle = db.Column(db.CHAR(100))
 
 
-class CheckItem(db.Model):
-    __tablename__ = 'checkitem'
-    id = db.Column(db.String(128), primary_key=True)  # 6位，2开头，自增
-    checkitemname = db.Column(db.String(64))
-    itemclass = db.Column(db.Integer, db.ForeignKey('checkclass.id'))
+class Nurseschedule(db.Model):
+    __tablename__ = 'nurseschedule'
+    nurseID = db.Column(db.CHAR(4), db.ForeignKey("medicalstaff.StaffID"), primary_key=True)
+    endDate = db.Column(db.DATE)
+    startDate = db.Column((db.DATE), primary_key=True)
 
-
-class ExamClass(db.Model):
-    __tablename__ = 'examclass'
-    id = db.Column(db.Integer, primary_key=True)  # 6位，3开头，自增
-    examname = db.Column(db.String(64))
-
-
-class ExamItem(db.Model):
-    __tablename__ = 'examitem'
-    id = db.Column(db.String(128), primary_key=True)
-    examitemname = db.Column(db.String(64))
-    itemclass = db.Column(db.Integer, db.ForeignKey('examclass.id'))
-
-
-class InhospitalArea(db.Model):
-    __tablename__ = 'inhospitalarea'
-    id = db.Column(db.Integer, primary_key=True)
-    areaname = db.Column(db.String(64))
-
-
-class BedInfo(db.Model):
-    __tablename__ = 'bedinfo'
-    id = db.Column(db.Integer, primary_key=True)
-    areaid = db.Column(db.Integer, db.ForeignKey('inhospitalarea.id'))
-    isused = db.Column(db.Boolean)
-
-
-class Price(db.Model):
-    __tablename__ = 'price'
-    id = db.Column(db.String(20), primary_key=True)
-    optionid = db.Column(db.Integer)  # 为药品、检查、检验ID
-    price = db.Column(db.Float)
-
-class FamilyDoctorArea(db.Model):                    #家庭医生服务区域
-    __tablename__ = 'fdarea'
-    id = db.Column(db.String(64), primary_key=True)
-    Areaname = db.Column(db.String(64))
-
-class FamilyDoctor(db.Model):                        #创建家庭医生
-    __tablename__ = 'fd'
-    id = db.Column(db.String(64), primary_key=True)
-    FDdoctorid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-    FDdoctorname = db.Column(db.String(64))
-    FDdoctorrank = db.Column(db.Integer)
-    FDdate = db.Column(db.String(128))
-
-class FamilyDoctorWorkArea(db.Model):               #分配区域
-    __tablename__ = 'fdworkarea'
-    id = db.Column(db.String(64), primary_key=True)
-    FDid = db.Column(db.String(64))                 #医生id
-    FDareaid= db.Column(db.String(64))              #分配区域的id
-    FDareaname= db.Column(db.String(64))            #分配区域的名字
-
-class FamilyPatientInfo(db.Model):                      #家庭医生病人基本信息
-    __tablename__ = 'fpinfo'
-    id = db.Column(db.String(64), primary_key=True)     #病人身份证号
-    FPname = db.Column(db.String(64))
-    FPage = db.Column(db.Integer)
-    FPsex = db.Column(db.String(64))
-    FPphone = db.Column(db.String(64))
-
-class FamilyPatientTestResult(db.Model):             #体检结果
-    __tablename__ = 'fptestresult'
-    id = db.Column(db.String(64), primary_key=True)
-    FPid = db.Column(db.String(64))                  #病人身份证
-    FPname = db.Column(db.String(64))
-    FPheartrate = db.Column(db.Integer)              #心率
-    FPbloodpressure = db.Column(db.Integer)          #血压
-    FPresultdate = db.Column(db.String(64))          #检查日期
-
-class SpecialConcern(db.Model):                      #特殊关注对象
-    __tablename__ = 'specialconcern'
-    id = db.Column(db.String(64), primary_key=True)
-    SCpid = db.Column(db.String(64))
-    SCpname = db.Column(db.String(64))                                      #特殊关注对象身份证 传递给门诊部
-    SCpdate = db.Column(db.String(64))
-
-class LecturePlace(db.Model):                        #家庭医生讲座地区
-    __tablename__ = 'lectureplace'
-    id = db.Column(db.String(64), primary_key=True)     #地区编号
-    LPname = db.Column(db.String(64))
-
-class LectureTime(db.Model):                         #家庭医生讲座安排
-    __tablename__ = 'lecturetime'
-    id = db.Column(db.String(64), primary_key=True)
-    FDid = db.Column(db.String(64))
-    LPid = db.Column(db.String(64), db.ForeignKey('lectureplace.id'))
-    LPname = db.Column(db.String(64))
-    LPdate = db.Column(db.String(128))
-
-
-class OpCheckin(db.Model):
-    __tablename__ = 'opcheckin'
-    opcheckinid = db.Column(db.Integer, primary_key=True)
-    patientid = db.Column(db.String(64), db.ForeignKey('patientinfo.id'))
-    doctorid = db.Column(db.String(20), db.ForeignKey('userinfo.id'))
-    doctortype = db.Column(db.Integer)
-    # scsignal = db.Column(db.Integer) #与特别关注对象表对比，0为非关注，1为关注
-    jips = db.Column(db.Boolean)
-
-
-class OpExam(db.Model):
-    __tablename__ = 'opexam'
-    id = db.Column(db.Integer, primary_key=True)
-    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
-    opid = db.Column(db.String(64), db.ForeignKey(
-        'opcheckin.patientid'))
-    examitems = db.Column(db.String(128))
-
-
-class OpCheck(db.Model):
-    __tablename__ = 'opcheck'
-    id = db.Column(db.Integer, primary_key=True)
-    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
-    opid = db.Column(db.String(64), db.ForeignKey(
-        'opcheckin.patientid'))
-    checkitems = db.Column(db.String(128))
-
-
-class OpRecipe(db.Model):
-    __tablename__ = 'oprecipe'
-    id = db.Column(db.Integer, primary_key=True)
-    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
-    opid = db.Column(db.String(64), db.ForeignKey(
-        'opcheckin.patientid'))
-    medicinenames = db.Column(db.String(128))
-    medicinenumbers = db.Column(db.String(128))
-
-
-class OpCheckinAfford(db.Model):
-    __tablename__ = 'opcheckinafford'
-    id = db.Column(db.Integer, primary_key=True)
-    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
-    opid = db.Column(db.String(64), db.ForeignKey(
-        'opcheckin.patientid'))
-    price = db.Column(db.Float)
-
-
-class OpExamAfford(db.Model):
-    __tablename__ = 'opexamafford'
-    id = db.Column(db.Integer, primary_key=True)
-    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
-    opid = db.Column(db.String(64), db.ForeignKey(
-        'opcheckin.patientid'))
-    price = db.Column(db.Float)
-
-
-class OpCheckAfford(db.Model):
-    __tablename__ = 'opcheckafford'
-    id = db.Column(db.Integer, primary_key=True)
-    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
-    opid = db.Column(db.String(64), db.ForeignKey(
-        'opcheckin.patientid'))
-    price = db.Column(db.Float)
-
-
-class OpRecipeAfford(db.Model):
-    __tablename__ = 'oprecipeafford'
-    id = db.Column(db.Integer, primary_key=True)
-    opcheckinid = db.Column(db.Integer, db.ForeignKey('opcheckin.opcheckinid'))
-    opid = db.Column(db.String(64), db.ForeignKey(
-        'opcheckin.patientid'))
-    price = db.Column(db.Float)
-
-
-class OpCost(db.Model):
-    __tablename__ = 'opcost'
-    opcheckinid = db.Column(db.Integer, db.ForeignKey(
-        'opcheckin.opcheckinid'), primary_key=True)
-    cost = db.Column(db.Float)
-
-
-class InPatientDeposit(db.Model):
-    __tablename__ = 'inpatientdeposit'
-    id = db.Column(db.Integer, db.ForeignKey(
-        'opcheckin.opcheckinid'), primary_key=True)
-    patientid = db.Column(db.String(64), db.ForeignKey(
-        'patientinfo.id'), primary_key=True)
-    rest = db.Column(db.Float)
-    totalcost = db.Column(db.Float)
-    ischeck = db.Column(db.Boolean)
-
-
-class InPatientTableSet(db.Model):
-    __tablename__ = 'inpatienttableset'
-    id = db.Column(db.Integer, db.ForeignKey(
-        'inpatientdeposit.id'), primary_key=True)
-    inpatienttimeandbedid = db.Column(db.String(128))
-    inpatientcheckid = db.Column(db.String(128))
-    inpatientinspectid = db.Column(db.String(128))
-    inpatientprescriptid = db.Column(db.String(128))
-
-
-class InPatientTimeAndBed(db.Model):
-    __tablename__ = 'inpatienttimeandbed'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    tableid = db.Column(db.Integer, db.ForeignKey(
-        'inpatienttableset.id'))
-    bedid = db.Column(db.Integer, db.ForeignKey('bedinfo.id'))
-    doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-    startdate = db.Column(db.Date)
-    enddate = db.Column(db.Date)
-
-
-class InPatientCheck(db.Model):
-    __tablename__ = 'inpatientcheck'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    tableid = db.Column(db.Integer, db.ForeignKey(
-        'inpatienttableset.id'))
-    checkitemsid = db.Column(db.String(128))
-    doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-    cost = db.Column(db.Float)
-
-
-class InPatientInspect(db.Model):
-    __tablename__ = 'inpatientinspect'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    tableid = db.Column(db.Integer, db.ForeignKey(
-        'inpatienttableset.id'))
-    inspectitemsid = db.Column(db.String(128))
-    doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-    cost = db.Column(db.Float)
-
-
-class InPatientPrescript(db.Model):
-    __tablename__ = 'inpatientprescript'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    tableid = db.Column(db.Integer, db.ForeignKey(
-        'inpatienttableset.id'))
-    medicineid = db.Column(db.String(128))
-    medicinenumbers = db.Column(db.String(128))
-    doctorinfoid = db.Column(db.String(64), db.ForeignKey('userinfo.id'))
-    cost = db.Column(db.Float)
-
-class ImgpCheckin(db.Model):
-    __tablename__ = 'imgpcheckin'
-    imgpcheckinid = db.Column(db.Integer, primary_key= True)
-    patientid = db.Column(db.String(64), db.ForeignKey('patientinfo.id'))
-    doctorid = db.Column(db.String(20), db.ForeignKey('userinfo.id'))
-    doctortype = db.Column(db.Integer)
-    # scsignal = db.Column(db.Integer) #与特别关注对象表对比，0为非关注，1为关注
-    # jips = db.Column(db.Boolean)
-
-class ImgpRecipe(db.Model):
-    __tablename__ = 'imgprecipe'
-    id = db.Column(db.Integer, primary_key= True)
-    imgpcheckinid = db.Column(db.Integer, db.ForeignKey('imgpcheckin.imgpcheckinid'))
-    imgpid = db.Column(db.String(64), db.ForeignKey(
-        'imgpcheckin.patientid'))
-    medicinenames = db.Column(db.String(128))
-    medicinenumbers = db.Column(db.String(128))
-
-class ImgpCheckinAfford(db.Model):
-    __tablename__ = 'imgpcheckinafford'
-    id = db.Column(db.Integer, primary_key= True)
-    imgpcheckinid = db.Column(db.Integer, db.ForeignKey('imgpcheckin.imgpcheckinid'))
-    imgpid = db.Column(db.String(64), db.ForeignKey(
-        'imgpcheckin.patientid'))
-    price = db.Column(db.Float)
-
-class ImgpRecipeAfford(db.Model):
-    __tablename__ = 'imgprecipeafford'
-    id = db.Column(db.Integer, primary_key= True)
-    imgpcheckinid = db.Column(db.Integer, db.ForeignKey('imgpcheckin.imgpcheckinid'))
-    imgpid = db.Column(db.String(64), db.ForeignKey(
-        'imgpcheckin.patientid'))
-    price = db.Column(db.Float)
-
-class ImgpCost(db.Model):
-    __tablename__ = 'imgpcost'
-    imgpcheckinid = db.Column(db.Integer, db.ForeignKey('imgpcheckin.imgpcheckinid'), primary_key= True)
-    cost = db.Column(db.Float)
+    def to_json(self):
+        json_ns = {
+            'nurseID':  self.nurseID,
+            'endDate': self.endDate.strftime('%Y-%m-%d'),
+            'startDate': self.startDate.strftime('%Y-%m-%d'),
+        }
+        return json_ns

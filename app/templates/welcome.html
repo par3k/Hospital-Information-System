@@ -1,11 +1,24 @@
-{% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+欢迎页
+<a href={{ url_for('auth.login')}}> Login </a>
+<br>
+<a methods="get" href={{ url_for('auth.register') }}> Rgister </a>
 
-{% block title %}Flasky - 欢迎 {% endblock %}
+<a methods="get" href={{ url_for('doctor.homepage') }}> doctor </a>
+<a methods="get" href={{ url_for('nurse.homepage') }}> nurse </a>
+<a methods="get" href={{ url_for('nurse.homepageleader') }}> nurse Leader</a>
+<a methods="get" href={{ url_for('doctor.homepageleader') }}> doctor Leader </a>
+<a methods="get" href={{ url_for('patient.homepage') }}> patient </a>
+<a methods="get" href={{ url_for('auth.register') }}> Rgister </a>
 
-{% block page_content %}
+<a methods="get" href={{ url_for('warehouse.homepage') }}> Ware </a>
+<a methods="get" href={{ url_for('hr.homepage') }}> HR </a>
 
-<div>
-    <h1>欢迎使用医院信息管理系统！</h1>
-</div>
-{% endblock %}
+</body>
+</html>

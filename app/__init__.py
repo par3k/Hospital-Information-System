@@ -1,47 +1,41 @@
 from flask import Flask, render_template
 from flask_bootstrap import Bootstrap
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from .config import config
+from flask_bcrypt import Bcrypt
 from flask import redirect, request, url_for
-
-
+from .config import Config
 bootstrap = Bootstrap()
 db = SQLAlchemy()
+bcrypt = Bcrypt()
+login_manager = LoginManager()
+login_manager.login_view = 'login'
+login_manager.login_message_category = 'info'
 
-def create_app(config_name):
+def create_app():
     app = Flask(__name__)
 
-    @app.before_request
-    def before_request():
-        path = request.path
-        doctorinfoid = request.cookies.get('doctorid')
-        print(path)
-        if doctorinfoid is None:
-            if path == '/login' or path == '/':
-                return
-            else:
-                return redirect('/login')
-        return
-
-    app.config.from_object(config[config_name])
-    config[config_name].init_app(app)
-
-    bootstrap.init_app(app)
+    app.config.from_object(Config)
+    app.debug = True
     db.init_app(app)
-    from .main import main as main_blueprint
-    app.register_blueprint(main_blueprint, url_prfix="/")
-    from .auth import auth as auth_blueprint
-    app.register_blueprint(auth_blueprint, url_prfix="/auth")
-    from .charges import charges as charges_blueprint
-    app.register_blueprint(charges_blueprint, url_prfix="/charges")
-    from .inpatient import inpatient as inpatient_blueprint
-    app.register_blueprint(inpatient_blueprint, url_prfix="/inpatient")
-    from .outpatient import outpatient as outpatient_blueprint
-    app.register_blueprint(outpatient_blueprint, url_prfix="/outpatient")
-    from .imgpatient import imgpatient as imgpatient_blueprint
-    app.register_blueprint(imgpatient_blueprint, url_prfix="/imgpatient")
-    from .familydoctor import familydoctor as familydoctor_blueprint
-    app.register_blueprint(familydoctor_blueprint, url_prfix="/familydoctor")
+    login_manager.init_app(app)
 
+    from .auth import bp_auth
+    app.register_blueprint(bp_auth, url_prfix="/")
+
+    from .doctor import bp_doctor
+    app.register_blueprint(bp_doctor, url_prfix='/doctor')
+
+    from .hr import bp_hr
+    app.register_blueprint(bp_hr, url_prfix="/hr")
+    from .nurse import bp_nurse
+
+    app.register_blueprint(bp_nurse, url_prfix="/nurse")
+    from .patient import bp_patient
+
+    app.register_blueprint(bp_patient, url_prfix="/patient")
+    from .warehouse import bp_warehouse
+
+    app.register_blueprint(bp_warehouse, url_prfix="/warehouse")
 
     return app

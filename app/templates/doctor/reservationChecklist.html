@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='static/assets/images/favicon.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/bootstrap/css/bootstrap.min.css') }}"/>
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/style.css') }}"/>
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/rmodal-no-bootstrap.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/colors/default.css') }}"/>
+     <script src="{{url_for('static', filename='html/js/rmodal.js')}}" ></script>
+{#    <script src="{{url_for('static', filename='html/js/jquery-3.4.1.js')}}" ></script>
+    <script src="{{url_for('static', filename='html/js/jquery-3.3.1.min.js')}}" ></script>#}
+    <title>Hospital Information System</title>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <script type="text/javascript">
+        window.onload = function() {
+            var modal = new RModal(document.getElementById('modal'), {
+                beforeOpen: function(next) {
+                    console.log('beforeOpen');
+                    next();
+                }
+                , afterOpen: function() {
+                    console.log('opened');
+                }
+
+                , beforeClose: function(next) {
+                    console.log('beforeClose');
+                    next();
+                }
+                , afterClose: function() {
+                    console.log('closed');
+                }
+            });
+
+            var prescribe = new RModal(document.getElementById('prescribe'), {
+                beforeOpen: function(next) {
+                    console.log('beforeOpen');
+                    next();
+                }
+                , afterOpen: function() {
+                    console.log('opened');
+                }
+
+                , beforeClose: function(next) {
+                    console.log('beforeClose');
+                    next();
+                }
+                , afterClose: function() {
+                    console.log('closed');
+                }
+            });
+
+            var medicineAdd = new RModal(document.getElementById('medicineAdd'), {
+                beforeOpen: function(next) {
+                    console.log('beforeOpen');
+                    next();
+                }
+                , afterOpen: function() {
+                    console.log('opened');
+                }
+
+                , beforeClose: function(next) {
+                    console.log('beforeClose');
+                    next();
+                }
+                , afterClose: function() {
+                    console.log('closed');
+                }
+            });
+
+            var inpatient = new RModal(document.getElementById('inpatient'), {
+                beforeOpen: function(next) {
+                    console.log('beforeOpen');
+                    next();
+                }
+                , afterOpen: function() {
+                    console.log('opened');
+                }
+
+                , beforeClose: function(next) {
+                    console.log('beforeClose');
+                    next();
+                }
+                , afterClose: function() {
+                    console.log('closed');
+                }
+            });
+
+            document.addEventListener('keydown', function(ev) {
+                modal.keydown(ev);
+                prescribe.keydown(ev);
+                medicineAdd.keydown(ev);
+                inpatient.keydown(ev);
+            }, false);
+
+            var eventDiagnose =[];
+            eventDiagnose= document.getElementsByName('showDiagnose');
+            for(var i=0;i<eventDiagnose.length;i++){
+                eventDiagnose[i].addEventListener("click", function(ev) {
+                    ev.preventDefault();
+                    modal.open();
+                }, false);
+            }
+
+            var eventInpatient =[];
+            eventInpatient= document.getElementsByName('showInpatient');
+            for(var i=0;i<eventInpatient.length;i++){
+                eventInpatient[i].addEventListener("click", function(ev) {
+                    ev.preventDefault();
+                    inpatient.open();
+                }, false);
+            }
+
+            var eventPre =[];
+            eventPre= document.getElementsByName('showPrescribe');
+            for(var i=0;i<eventPre.length;i++){
+                eventPre[i].addEventListener("click", function(ev) {
+                    ev.preventDefault();
+                    prescribe.open();
+                }, false);
+            }
+
+            document.getElementById('showAddMedicine').addEventListener("click", function(ev) {
+                ev.preventDefault();
+                medicineAdd.open();
+            }, false);
+
+            window.modal = modal;
+            window.prescribe = prescribe;
+            window.medicineAdd = medicineAdd;
+            window.inpatient = inpatient;
+        }
+
+        function jumpDiagnose(e){
+            var i=e;
+            var reservation=document.getElementById("reservation")
+            var diarid=reservation.rows[i].cells[1].innerHTML;//Name
+            var diaName=reservation.rows[i].cells[2].innerHTML;//Name
+            var diaDate=reservation.rows[i].cells[3].innerHTML;
+            var desc=reservation.rows[i].cells[5].innerHTML;
+            document.getElementById("dia-rid").value=diarid;
+            document.getElementById("dia-name").value=diaName;
+            document.getElementById("dia-date").value=diaDate;
+            document.getElementById("dia_desc").value=desc;
+        }
+
+        function jumpPre(e){
+            var i=e;
+            var reservation=document.getElementById("reservation")
+            var pId = reservation.rows[i].cells[7].innerHTML;//patient ID
+            var preName=reservation.rows[i].cells[2].innerHTML;
+            document.getElementById("pre-name").value=preName;
+            document.getElementById("p_id").value=pId;
+
+            $("#add_medicine").html("")
+
+            //alert(pId);
+
+        }
+
+        function jumpInpatient(e) {
+            var i=e;
+            var reservation=document.getElementById("reservation")
+            var pId = reservation.rows[i].cells[7].innerHTML;//patient ID
+            var inName=reservation.rows[i].cells[2].innerHTML;
+            document.getElementById("in-name").value=inName;
+            document.getElementById("patientid").value=pId;
+        }
+
+        function addmedicine(){
+            var tableDom = document.getElementById("medicinetable");
+            var rows = tableDom.rows;
+            var rowid = rows.length;
+
+            var obj = document.getElementById("medicine_select"); //定位id
+            var index = obj.selectedIndex; // 选中索引
+            var text = obj.options[index].text; // 选中文本     输出张三等汉字信息
+
+
+            var medicinename=text  //名字
+            var medicineid=document.getElementById("medicine_select").value;// id
+            var medicinequantity=document.getElementById("med_quan").value;
+            //var medicinequantity1=document.getElementById("med_quan").innerHTML;
+            //console.log(medicinequantity);
+           // console.log(medicinequantity1);
+
+            str=
+                    "<tr>"+
+                    "<th>"+rowid+"</th>"+
+                    "<th>"+medicineid+"</th>"+
+                    "<th>"+medicinename+"</th>"+
+                    "<th>"+medicinequantity+"</th>"+
+                    "</tr>";
+            $("#add_medicine").append(str);
+
+        }
+
+        function sendprescription(){
+
+            var pid=document.getElementById("p_id").value
+            console.log("patient:"+pid)
+
+            {#var tableDom = document.getElementById("medicinetable");#}
+            {#var rows = tableDom.rows;#}
+            {#var rowid = rows.length;#}
+
+            var mytable = document.getElementById("medicinetable");
+            var data_mid = [];
+            var data_quantity = [];
+
+            for(var i=1,rows=mytable.rows.length; i<rows; i++){
+                    data_mid[i-1] = mytable.rows[i].cells[1].innerHTML;
+                    data_quantity[i-1] = mytable.rows[i].cells[3].innerHTML;
+
+            }
+            console.log(data_mid);
+            console.log(data_quantity);
+
+             var data={
+                 'pid': pid ,
+                 'mid': data_mid,
+                 'mquantity':data_quantity
+            };
+            $.ajax({
+                url: "{{ url_for('doctor.prescribe') }}", //请求的url
+                type: 'post', //请求的方式
+                contentType: 'application/json; charset=UTF-8',
+                //data: $('#search').serialize(), //form表单里要提交的内容，里面的input等写上name就会提交，这是序列化
+                data: JSON.stringify(data),
+                //dataType : 'json',
+                error:function (data) {
+                    alert('查询失败');
+                },
+                success:function (data) {
+            }
+            });
+        }
+
+    </script>
+
+</head>
+
+<body class="fix-header card-no-border fix-sidebar">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Hospital</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light">
+                <!-- ============================================================== -->
+                <!-- Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/home">
+                        <!-- Logo icon --><b>
+                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                            <!-- Dark Logo icon -->
+                            <img src="../../static/assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                            <!-- Light Logo icon -->
+                            <img src="../../static/assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text --><span>
+                         <!-- dark Logo text -->
+                         <img src="../../static/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                         <!-- Light Logo text -->
+                         <img src="../../static/assets/images/logo-light-text.png" class="light-logo" alt="homepage" /></span> </a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark" href="javascript:void(0)"><i class="fa fa-bars"></i></a> </li>
+                    </ul>
+                    <ul class="navbar-nav my-lg-0">
+                        <!-- ============================================================== -->
+                        <!-- Profile -->
+                        <!-- ============================================================== -->
+                        <div class="nav-item dropdown u-pro">
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href="{{ url_for('doctor.homepage') }}">{{ user.name }}</a>
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href="{{ url_for('auth.welcome') }}">Logout</a>
+
+                        </div>
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.homepage') }} aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Home</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.profile') }} aria-expanded="false"><i class="fa fa-user-circle-o"></i><span class="hide-menu">Profile</span></a>
+                        </li>
+                        {% if user.position == 'Leader' %}
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.schedule') }} aria-expanded="false"><i class="fa fa-calendar"></i><span class="hide-menu">Schedule</span></a>
+                        </li>
+                        {% endif %}
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.myschedule') }} aria-expanded="false"><i class="fa fa-calendar-o"></i><span class="hide-menu">My Schedule</span></a>
+                         </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.reservationcheck') }} aria-expanded="false"><i class="fa fa-smile-o"></i><span class="hide-menu">Reservation</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.inpatientlist') }} aria-expanded="false"><i class="fa fa-check-square"></i><span class="hide-menu">Inpatient Check</span></a>
+                        </li>
+                    </ul>
+<!--                    <div class="text-center m-t-30">
+                        <a href="#" class="btn waves-effect waves-light btn-info hidden-md-down"> Upgrade to Pro</a>
+                    </div>-->
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-5 align-self-center">
+                        <h3 class="text-themecolor">Reservation</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">Reservation</li>
+                        </ol>
+                    </div><!--
+                    <div class="col-md-7 align-self-center">
+                        <a href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down"> Upgrade to Pro</a>
+                    </div>-->
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- column -->
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Reservation Schedule</h4>
+                                <form method="post" action="{{ url_for('doctor.searchdate') }}" id="search">
+                                <div style="margin-bottom: 20px; text-align: center">
+                                    <label class="control-label col-xs-4" style="margin-right: 10px">
+                                        Date:
+                                    </label>
+                                    <input type="date"  name="sdate" class="form-control" style="width: 20%"/>
+                                    <button href="#" type="submit" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down"> Search</button>
+                                </div>
+                                </form>
+                                <div class="table-responsive">
+                                    <table id="reservation" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th hidden>reservation ID</th>
+                                                <th>Patient Name</th>
+                                                <th>Date</th>
+                                                <th>Time</th>
+                                                <th hidden>reservation desc</th>
+                                                <th style="width: 40%; text-align: center">Option</th>
+                                                <th hidden>Patient ID</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="show_tbody">
+                                            <tr>
+                                                {% for reservation in reservationCheck %}
+                                                <td>{{loop.index}}</td>
+                                                <td hidden>{{reservation.reservationID}} </td>
+                                                <td class="patientName">{{reservation.patient.name}}</td>
+                                                <td>{{reservation.reservationDate}}</td>
+                                                {%  if reservation.reservationTime == '8' %}
+                                                <td>8:00-9:00</td>
+                                                {% elif reservation.reservationTime == '9' %}
+                                                <td>9:00-10:00</td>
+                                                {% elif reservation.reservationTime == '10' %}
+                                                <td>10:00-11:00</td>
+                                                {% elif reservation.reservationTime == '11' %}
+                                                <td>11:00-12:00</td>
+                                                {% elif reservation.reservationTime == '14' %}
+                                                <td>14:00-15:00</td>
+                                                {% elif reservation.reservationTime == '15' %}
+                                                <td>15:00-16:00</td>
+                                                {% elif reservation.reservationTime == '16' %}
+                                                <td>16:00-17:00</td>
+                                                {% elif reservation.reservationTime == '17' %}
+                                                <td>17:00-18:00</td>
+                                                {% endif%}
+                                                <td hidden>{{reservation.description}} </td>
+                                                <td>
+                                                    <div style="float: left">
+                                                        <a  onclick="jumpDiagnose({{loop.index}})" href="#" name="showDiagnose" class="btn btn-info " style="margin-right: 10px">
+                                                            Diagnose
+                                                        </a>
+                                                        <a onclick="jumpPre({{loop.index}})" name="showPrescribe" href="#" class="btn btn-info showPrescribe" style="margin-right: 10px">
+                                                            Prescribe
+                                                        </a>
+                                                        <a onclick="jumpInpatient({{loop.index}})" name="showInpatient" href="#" class="btn btn-info showInpatient" style="margin-right: 10px">
+                                                            Inpatient
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                                <td hidden>{{reservation.id}} </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="modal" class="modal">
+                        <div class="modal-dialog animated">
+                            <div class="modal-content">
+                                <form action="{{url_for('doctor.diagnose')}}" id="form_diagnose" class="form-horizontal" method="post" >
+                                    <div class="modal-header">
+                                        <strong>Diagnose</strong>
+                                    </div>
+                                    <input type="hidden" name="dia-rid" id="dia-rid" value=""/>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+
+                                            <label for="dia-name" class="control-label col-xs-4">
+                                                Name:
+                                            </label>
+                                            <input type="text" name="dia-name" id="dia-name" class="form-control" readonly="readonly" value=""/>
+
+                                            <label for="dia-date" class="control-label col-xs-4" style="padding-top: 20px">
+                                                Date:
+                                            </label>
+                                            <input type="text" name="dia-date" id="dia-date" class="form-control" readonly="readonly"/>
+
+                                            <label for="dia-des" class="control-label col-xs-4" style="padding-top: 20px">
+                                                Please write the description for patient:
+                                            </label>
+                                            <div class="input-group col-xs-7">
+                                                <textarea id="dia_desc" name="dia_desc" rows="5" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" type="button" onclick="modal.close();">Cancel</button>
+                                        <button class="btn btn-primary" style="background-color: #20aee3; border-color: #20aee3" type="submit" onclick="modal.close();">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="inpatient" class="modal">
+                        <div class="modal-dialog animated">
+                            <div class="modal-content">
+                                <form id="form_inpatient" class="form-horizontal"  action="{{ url_for('doctor.inpatient') }}" method="post">
+                                    <div class="modal-header">
+                                        <strong>Inpatient</strong>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div>
+                                                <label for="in-name" class="control-label col-xs-4" style="width:30%">
+                                                    Patient Name:
+                                                </label>
+                                            <input type="text" name="in-name" id="in-name" class="form-control" readonly="readonly" style="width:40%"/>
+                                            </div>
+
+                                            <div style="margin-top: 10px">
+                                                <label for="in-date" class="control-label col-xs-4" style="width:30%">
+                                                    Inpatient Date:
+                                                </label>
+                                                <input type="date" name="in-date" id="in-date" class="form-control" style="width:40%"/>
+                                                <input type="hidden" name="patientid" id="patientid" value=""/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" type="button" onclick="inpatient.close();">Cancel</button>
+                                        <button class="btn btn-primary" style="background-color: #20aee3; border-color: #20aee3" type="submit" onclick="inpatient.close();">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="prescribe" class="modal">
+                        <div class="modal-dialog animated">
+                            <div class="modal-content">
+                                    <div class="modal-header">
+                                        <strong>Prescribe</strong>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div>
+                                                <label for="pre-name" class="control-label col-xs-4" style="width:30%">
+                                                Patient Name:
+                                                </label>
+                                                <input type="text" name="pre-name" id="pre-name" class="form-control" readonly="readonly" style="width:40%"/>
+                                                <input type="hidden" name="p_id" id="p_id" />
+                                            </div>
+                                            <div>
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h4 class="card-title">Medicine List</h4>
+                                                        <div style="float: left;margin-bottom: 10px">
+                                                            <a id="showAddMedicine" href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down">
+                                                                Add Medicine
+                                                            </a>
+                                                        </div>
+                                                        <div class="table-responsive">
+                                                            <table id="medicinetable" class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th style="width:5%">#</th>
+                                                                    <th style="width:10%">MID</th>
+                                                                    <th style="width:25%">Medicine Name</th>
+                                                                    <th style="width:25%">Quantity</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody id="add_medicine">
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" type="button" onclick="prescribe.close();">Cancel</button>
+                                        <button class="btn btn-primary" style="background-color: #20aee3; border-color: #20aee3" onclick="prescribe.close();sendprescription()">Save</button>
+                                    </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="medicineAdd" class="modal">
+                        <div class="modal-dialog animated">
+                            <div class="modal-content">
+                                    <div class="modal-header">
+                                        <strong>Add Medicine</strong>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Medicine:
+                                                </label>
+                                                <select id="medicine_select" class="custom-select b-0" style="width: 40%">
+                                                    {% for medicine in medicineInfo %}
+                                                    <option value="{{medicine.medicineID}}">{{medicine.m_name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Quantity:
+                                                </label>
+                                                <input type="number" name="med_quan" id="med_quan" class="form-control" style="width:40%"/>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" type="button" onclick="medicineAdd.close();">Cancel</button>
+                                        <button class="btn btn-primary" style="background-color: #20aee3; border-color: #20aee3" onclick="medicineAdd.close();addmedicine()">Save</button>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+     <script src="{{url_for('static', filename='assets/node_modules/jquery/jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/popper.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/bootstrap.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/perfect-scrollbar.jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/waves.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/sidebarmenu.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/custom.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/peity/jquery.peity.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/peity/jquery.peity.init.js')}}" ></script>
+</body>
+
+</html>

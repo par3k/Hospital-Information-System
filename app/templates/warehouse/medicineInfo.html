@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='static/assets/images/favicon.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/bootstrap/css/bootstrap.min.css') }}"/>
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/style.css') }}"/>
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/rmodal-no-bootstrap.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/colors/default.css') }}"/>
+     <script src="{{url_for('static', filename='html/js/rmodal.js')}}" ></script>
+    <title>Hospital Information System</title>
+{#    <link rel="icon" type="image/png" sizes="16x16" href="../../static/assets/images/favicon.png">#}
+{#    <title>AdminWrap - Easy to Customize Bootstrap 4 Admin Template</title>#}
+{#    <!-- Bootstrap Core CSS -->#}
+{#    <link href="../../static/assets/node_modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">#}
+{#    <!-- Custom CSS -->#}
+{#    <link href="css/style.css" rel="stylesheet">#}
+{#    <!-- You can change the theme colors from here -->#}
+{#    <link href="css/colors/default.css" id="theme" rel="stylesheet">#}
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+    <script type="text/javascript">
+        window.onload = function() {
+            var medicineAdd = new RModal(document.getElementById('medicineAdd'), {
+                beforeOpen: function(next) {
+                    console.log('beforeOpen');
+                    next();
+                }
+                , afterOpen: function() {
+                    console.log('opened');
+                }
+                , beforeClose: function(next) {
+                    console.log('beforeClose');
+                    next();
+                }
+                , afterClose: function() {
+                    console.log('closed');
+                }
+            });
+            var medicineModify = new RModal(document.getElementById('medicineModify'), {
+                beforeOpen: function(next) {
+                    console.log('beforeOpen');
+                    next();
+                }
+                , afterOpen: function() {
+                    console.log('opened');
+                }
+
+                , beforeClose: function(next) {
+                    console.log('beforeClose');
+                    next();
+                }
+                , afterClose: function() {
+                    console.log('closed');
+                }
+            });
+
+            document.addEventListener('keydown', function(ev) {
+                medicineAdd.keydown(ev);
+                medicineModify.keydown(ev);
+                //prescribe.keydown(ev);
+            }, false);
+
+            var event =[];
+            event= document.getElementsByName('medicineModify');
+            for(var i=0;i<event.length;i++){
+                event[i].addEventListener("click", function(ev) {
+                    ev.preventDefault();
+                    medicineModify.open();
+                }, false);
+            }
+
+            document.getElementById('showmedicineAdd').addEventListener("click", function(ev) {
+                ev.preventDefault();
+                medicineAdd.open();
+            }, false);
+
+
+            window.medicineAdd = medicineAdd;
+            window.medicineModify = medicineModify;
+        }
+    </script>
+</head>
+
+<body class="fix-header card-no-border fix-sidebar">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Admin Wrap</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light">
+                <!-- ============================================================== -->
+                <!-- Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/home">
+                        <!-- Logo icon --><b>
+                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                            <!-- Dark Logo icon -->
+                            <img src="../../static/assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                            <!-- Light Logo icon -->
+                            <img src="../../static/assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text --><span>
+                         <!-- dark Logo text -->
+                         <img src="../../static/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                         <!-- Light Logo text -->
+                         <img src="../../static/assets/images/logo-light-text.png" class="light-logo" alt="homepage" /></span> </a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark" href="javascript:void(0)"><i class="fa fa-bars"></i></a> </li>
+                    </ul>
+                    <ul class="navbar-nav my-lg-0">
+                        <!-- ============================================================== -->
+                        <!-- Profile -->
+                        <!-- ============================================================== -->
+                        <div class="nav-item dropdown u-pro">
+                                 <a class="nav-link dropdown-toggle waves-effect waves-dark " href="{{ url_for('warehouse.homepage') }}">{{ user.name }}</a>
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href="{{ url_for('auth.welcome') }}">Logout</a>
+
+                        </div>
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('warehouse.homepage') }} aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Main</span></a>
+                        </li>
+                         <li> <a class="waves-effect waves-dark" href={{ url_for('warehouse.medicine') }} aria-expanded="false"><i class="fa fa-table"></i><span class="hide-menu">MedicineInfo</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('warehouse.prescription') }} aria-expanded="false"><i class="fa fa-user-circle-o"></i><span class="hide-menu">PrescriptionDetail</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('warehouse.profile') }} aria-expanded="false"><i class="fa fa-bookmark-o"></i><span class="hide-menu">Profile</span></a>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-5 align-self-center">
+                        <h3 class="text-themecolor">Medicine Info</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">Medicine Info</li>
+                        </ol>
+                    </div>
+
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- column -->
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+<!--                               <h4 class="card-title">Medicine Info</h4>-->
+                                <form id="search"  onsubmit="return false" method="post">
+                                     <input type="hidden" name="formtype" id="form_name" value="search">
+                                <div style="margin-bottom: 10px; text-align: center">
+                                    <label class="control-label col-xs-4" style="margin-right: 10px">
+                                        Name:
+                                    </label>
+                                    <input type="text" name="search_name" id="s_name" value="" class="form-control" style="width: 20%"/>
+{#                                    <label class="control-label col-xs-4" style="margin-right: 10px">#}
+{#                                        Department:#}
+{#                                    </label>#}
+{#                                    <select name="search_department" class="custom-select b-0">#}
+{#                                        <option value="All">All</option>#}
+{#                                        <option value="Ophthalmology">Ophthalmology</option>#}
+{#                                        <option value="Surgical">Surgical</option>#}
+{#                                        <option value="Skin">Skin</option>#}
+{#                                    </select>#}
+{##}
+{#                                    <label class="control-label col-xs-4" style="margin-right: 10px; margin-left: 10px">#}
+{#                                        Status:#}
+{#                                    </label>#}
+{#                                    <select name="search_status" class="custom-select b-0">#}
+{#                                        <option value="All">All</option>#}
+{#                                        <option value="Passive">Passive</option>#}
+{#                                        <option value="Active">Active</option>#}
+{#                                    </select>#}
+                                    <button href="#" onclick="subForm()" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down"> Search</button>
+{#                                    <button id="select1" >查询</button>#}
+                                </div>
+                                </form>
+                                <div style="float: left;margin-bottom: 10px">
+                                    <a id="showmedicineAdd" href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down">
+                                        Add
+                                    </a>
+                                </div>
+<!--                                <h6 class="card-subtitle">Add class <code>.table</code></h6>-->
+                                <div class="table-responsive">
+                                    <table id="table"  class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>MedicineID</th>
+                                                <th>Name</th>
+                                                <th>Price</th>
+                                                <th>Company</th>
+                                                <th>Description</th>
+                                                <th>WarehouseID</th>
+                                                <th>Stock</th>
+                                                <th>inDate</th>
+                                                <th>expireDate</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for medicine in medicineInfo %}
+                                            <tr>
+{#                                                <td>{{loop.index}}</td>#}
+                                                <td>{{ medicine.medicineID}}</td>
+                                                <td>{{ medicine.m_name}}</td>
+                                                <td>{{ medicine.price}}</td>
+                                                <td>{{ medicine.company}}</td>
+                                                <td>{{ medicine.description}}</td>
+                                                <td>{{ medicine.warehouse_ID}}</td>
+                                                <td>{{ medicine.stock}}</td>
+                                                <td>{{ medicine.inDate}}</td>
+                                                {% if medicine.expireDate < dt   %}
+                                                    {% if medicine.stock > 0   %}
+                                                        <td style="color: #bb0000">{{ medicine.expireDate}}</td>
+                                                    {% else %}
+                                                        <td>{{ medicine.expireDate}}</td>
+                                                    {% endif %}
+                                                {% else %}
+                                                    <td>{{ medicine.expireDate}}</td>
+                                                {% endif %}
+                                                <td >
+                                                    <div style=" text-align: center ">
+                                                    <a href="#" name="medicineModify" class="btn waves-effect waves-light btn btn-info hidden-sm-down"
+                                                       style="background-color: #1aac26;border-color: #1aac26" onclick="getrow()" >
+                                                        Modify
+                                                    </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {%endfor%}
+
+                                        </tbody>
+                                    </table>
+                                    <div class="text-center m-t-30">
+                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="medicineAdd" class="modal">
+                        <div class="modal-dialog animated">
+                            <div class="modal-content">
+                                <form action="{{ url_for('warehouse.medicine') }}" id="11" class="form-horizontal" method="post">
+                                    <input type="hidden" name="formtype" value="add">
+                                    <div class="modal-header">
+                                        <strong>Add Medicine</strong>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div>
+                                                <label for="add-name" class="control-label col-xs-4" style="width:20%">
+                                                    Name:
+                                                </label>
+                                                <input type="text" name="add_medicinename" id="add_medicinenamename" class="form-control" style="width: 40%"/>
+                                            </div>
+                                              <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Price:
+                                                </label>
+                                                <input type="number" name="add_medicineprice" id="add_medicineprice" class="form-control" style="width: 40%"/>
+                                            </div>
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Stock:
+                                                </label>
+                                                <input type="number" name="add_stock" id="add_stock" class="form-control" style="width: 40%"/>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Company:
+                                                </label>
+                                                <input type="text" name="add_medicinecompany" id="add_medicinecompany" class="form-control" style="width: 40%"/>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Warehouse:
+                                                </label>
+                                                <select class="custom-select b-0" name="add_warehouse" style="width: 40%">
+                                                    <option value="01">01</option>
+{#                                                    <option value="002">002</option>#}
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    ExpireDate:
+                                                </label>
+                                                <input type="date" name="add_medicineexpiredate" id="add_medicineexpiredate" class="form-control" style="width: 40%"/>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Description:
+                                                </label>
+                                                <textarea id="add_medicinedescription" name="add_medicinedescription" rows="5" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" type="button" onclick="medicineAdd.close();">Cancel</button>
+                                        <button class="btn btn-primary" style="background-color: #20aee3; border-color: #20aee3" type="submit" onclick="medicineAdd.close();">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <div id="medicineModify" class="modal">
+                        <div class="modal-dialog animated">
+                            <div class="modal-content">
+                                <form action="{{ url_for('warehouse.medicine') }}" id="12" class="form-horizontal" method="post">
+                                    <input type="hidden" name="formtype" value="modify">
+                                    <div class="modal-header">
+                                        <strong>Modify</strong>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+
+
+                                            <input type="hidden" name="modify_id"  id="modify_id" value="">
+                                            <div>
+                                                <label for="add-name" class="control-label col-xs-4" style="width:20%">
+                                                    Name:
+                                                </label>
+                                                <input type="text" name="modify_medicinename" id="modify_medicinename" class="form-control" style="width: 40%"/>
+                                            </div>
+                                              <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Price:
+                                                </label>
+                                                <input type="number" name="modify_medicineprice" id="modify_medicineprice" class="form-control" style="width: 40%"/>
+                                            </div>
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Stock:
+                                                </label>
+                                                <input type="number" name="modify_stock" id="modify_stock" class="form-control" style="width: 40%"/>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Company:
+                                                </label>
+                                                <input type="text" name="modify_medicinecompany" id="modify_medicinecompany" class="form-control" style="width: 40%"/>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Warehouse:
+                                                </label>
+                                                <select class="custom-select b-0" id="modify_warehouse" name="modify_warehouse" style="width: 40%">
+                                                    <option value="01">01</option>
+{#                                                    <option value="002">002</option>#}
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    ExpireDate:
+                                                </label>
+                                                <input type="date" name="modify_medicineexpiredate" id="modify_medicineexpiredate" class="form-control" style="width: 40%"/>
+                                            </div>
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                   InDate:
+                                                </label>
+                                                <input type="date" name="modify_medicineindate" id="modify_medicineindate" class="form-control" style="width: 40%"/>
+                                            </div>
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Description:
+                                                </label>
+                                                <textarea id="modify_medicinedescription" name="modify_medicinedescription" rows="5" class="form-control"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" type="button" onclick="medicineModify.close();">Cancel</button>
+                                        <button class="btn btn-primary" style="background-color: #20aee3; border-color: #20aee3" type="submit" onclick="medicineModify.close();">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <footer class="footer"> Warehouse Admin  </footer>
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+     <script type="text/javascript">
+        function getrow() {
+            var td = event.srcElement; // 通过event.srcElement 获取激活事件的对象 td
+            var index=td.parentNode.parentNode.parentElement.rowIndex
+            var i=index;
+            console.log(index)
+            var id=document.getElementById("table").rows[i].cells[0].innerHTML;
+            var name=document.getElementById("table").rows[i].cells[1].innerHTML;
+            var price=document.getElementById("table").rows[i].cells[2].innerHTML;
+            var company=document.getElementById("table").rows[i].cells[3].innerHTML;
+            var description=document.getElementById("table").rows[i].cells[4].innerHTML;
+            var warehouse=document.getElementById("table").rows[i].cells[5].innerHTML;
+            var stock=document.getElementById("table").rows[i].cells[6].innerHTML;
+            var indate=document.getElementById("table").rows[i].cells[7].innerHTML;
+            var expiredate=document.getElementById("table").rows[i].cells[8].innerHTML;
+
+            document.getElementById("modify_id").value=id
+            document.getElementById("modify_medicinename").value=name
+            document.getElementById("modify_medicineprice").value=price
+            document.getElementById("modify_medicinecompany").value=company
+            document.getElementById("modify_medicinedescription").value=description
+            document.getElementById("modify_warehouse").value=warehouse
+            document.getElementById("modify_stock").value=stock
+            document.getElementById("modify_medicineindate").value=indate
+            document.getElementById("modify_medicineexpiredate").value=expiredate
+            console.log(index)
+
+        }
+        function doclick() {
+        var td = event.srcElement; // 通过event.srcElement 获取激活事件的对象 td
+        index=td.parentElement.rowIndex
+        {#alert("行号：" + (td.parentElement.rowIndex + 1) + "，内容：" + td.innerText);  #}
+
+
+    }
+    </script>
+    <script>
+//别忘了导入该用的js文件
+function subForm() {
+         var name = $("#s_name").val();
+         var data={
+        'name':name
+        };
+    $.ajax({
+
+        url: "{{ url_for('warehouse.search') }}", //请求的url
+        type: 'post', //请求的方式
+        contentType: 'application/json; charset=UTF-8',
+        //data: $('#search').serialize(), //form表单里要提交的内容，里面的input等写上name就会提交，这是序列化
+        data: JSON.stringify(data),
+        //dataType : 'json',
+        error:function (data) {
+            alert('查询失败');
+        },
+        success:function (data) {
+{#             {% for medicine in medicineInfo %}#}// 模板是能用的···
+{#                 console.log({{ loop.index }})#}
+{#             {%endfor%}#}
+            //清空table中的html
+            $("#table").html("");
+            str="<thead>"+
+                    "<tr>"+
+                        "<th>MedicineID</th>"+
+                        "<th>Name</th>"+
+                        "<th>Price</th>"+
+                        "<th>Company</th>"+
+                        "<th>Description</th>"+
+                        "<th>WarehouseID</th>"+
+                        "<th>Stock</th>"+
+                        "<th>inDate</th>"+
+                        "<th>expireDate</th>"+
+                    "</tr>"+
+                "</thead>"+
+                "<tbody>"
+
+            $("#table").append(str);
+            for (var prop in data) {
+                console.log(data[prop]['inDate']);
+            }
+            {#for(var i = 0;i<data.data.length;i++){#}
+            for(var i in data){
+                str1 =
+                    "<tr>" +
+                    "<td>"+data[i]['medicineID']+ "</td>" +
+                    "<td>"+data[i]['name']+ "</td>" +
+                    "<td>"+data[i]['price']+ "</td>" +
+                    "<td>"+data[i]['company']+ "</td>" +
+                    "<td>"+data[i]['description']+ "</td>" +
+                    "<td>"+data[i]['warehouse_ID']+ "</td>" +
+                    "<td>"+data[i]['stock']+ "</td>" +
+                    "<td>"+data[i]['inDate']+ "</td>" +
+                    "<td>"+data[i]['expireDate']+ "</td>" +
+                    "<td>"+
+                        "<div style=\" text-align: center \">\n" +
+                        "<a href=\"#\"  name=\"medicineModify\" class=\"btn waves-effect waves-light btn btn-info hidden-sm-down\"\n" +
+                        "style=\"background-color: #1aac26;border-color: #1aac26\" onclick=\"getrow()\" >\n" +
+                        "Modify\n" +
+                        "</a>\n" +
+                        " </div>"+
+                    "</td>"+
+                    "</tr>";
+                $("#table").append(str1);
+            }
+            $("#table").append("</tbody>");
+                    document.addEventListener('keydown', function(ev) {
+            medicineAdd.keydown(ev);
+            medicineModify.keydown(ev);
+            //prescribe.keydown(ev);
+        }, false);
+        var event =[];
+        event= document.getElementsByName('medicineModify');
+        for(var i=0;i<event.length;i++){
+            event[i].addEventListener("click", function(ev) {
+                ev.preventDefault();
+                medicineModify.open();
+            }, false);
+        }
+        document.getElementById('showmedicineAdd').addEventListener("click", function(ev) {
+            ev.preventDefault();
+            medicineAdd.open();
+        }, false);
+        }
+    });
+
+
+
+}
+
+</script>
+     <script src="{{url_for('static', filename='assets/node_modules/jquery/jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/popper.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/bootstrap.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/perfect-scrollbar.jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/waves.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/sidebarmenu.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/custom.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/peity/jquery.peity.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/peity/jquery.peity.init.js')}}" ></script>
+{#    <script src="../../static/assets/node_modules/jquery/jquery.min.js"></script>#}
+{#    <!-- Bootstrap tether Core JavaScript -->#}
+{#    <script src="../../static/assets/node_modules/bootstrap/js/popper.min.js"></script>#}
+{#    <script src="../../static/assets/node_modules/bootstrap/js/bootstrap.min.js"></script>#}
+{#    <!-- slimscrollbar scrollbar JavaScript -->#}
+{#    <script src="js/perfect-scrollbar.jquery.min.js"></script>#}
+{#    <!--Wave Effects -->#}
+{#    <script src="js/waves.js"></script>#}
+{#    <!--Menu sidebar -->#}
+{#    <script src="js/sidebarmenu.js"></script>#}
+{#    <!--Custom JavaScript -->#}
+{#    <script src="js/custom.min.js"></script>#}
+{#    <!-- jQuery peity -->#}
+{#    <script src="../../static/assets/node_modules/peity/jquery.peity.min.js"></script>#}
+{#    <script src="../../static/assets/node_modules/peity/jquery.peity.init.js"></script>#}
+</body>
+
+</html>

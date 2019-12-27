@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+       <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='static/assets/images/favicon.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/bootstrap/css/bootstrap.min.css') }}"/>
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/style.css') }}"/>
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/rmodal-no-bootstrap.css') }}"/>
+
+
+
+
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/colors/default.css') }}"/>
+     <script src="{{url_for('static', filename='html/js/rmodal.js')}}" ></script>
+    <title>Hospital Information System</title>
+{#    <link rel="icon" type="image/png" sizes="16x16" href="../../static/assets/images/favicon.png">#}
+{#    <title>Hospital Information System</title>#}
+{#    <!-- Bootstrap Core CSS -->#}
+{#    <link href="../../static/assets/node_modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">#}
+{#    <!-- Custom CSS -->#}
+{#    <link href="../../static/html/css/style.css" rel="stylesheet">#}
+{#    <!-- You can change the theme colors from here -->#}
+{#    <link href="../../static/html/css/colors/default.css" id="theme" rel="stylesheet">#}
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via fi
+
+
+    le:// -->
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+
+<!--    <link href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/animate.css/3.5.2/animate.min.css">-->
+
+    <link rel="stylesheet" href="../../static/html/css/rmodal-no-bootstrap.css" type="text/css" />
+    <script type="text/javascript" src="../../static/html/js/rmodal.js"></script>
+    <script type="text/javascript">
+        window.onload = function() {
+            var register = new RModal(document.getElementById('register'), {
+                beforeOpen: function(next) {
+                    console.log('beforeOpen');
+                    next();
+                }
+                , afterOpen: function() {
+                    console.log('opened');
+                }
+
+                , beforeClose: function(next) {
+                    console.log('beforeClose');
+                    next();
+                }
+                , afterClose: function() {
+                    console.log('closed');
+                }
+            });
+
+            var leave = new RModal(document.getElementById('leave'), {
+                beforeOpen: function(next) {
+                    console.log('beforeOpen');
+                    next();
+                }
+                , afterOpen: function() {
+                    console.log('opened');
+                }
+
+                , beforeClose: function(next) {
+                    console.log('beforeClose');
+                    next();
+                }
+                , afterClose: function() {
+                    console.log('closed');
+                }
+            });
+
+            document.addEventListener('keydown', function(ev) {
+                register.keydown(ev);
+                leave.keydown(ev);
+            }, false);
+
+            var event =[];
+            event= document.getElementsByName('showRegister');
+            for(var i=0;i<event.length;i++){
+                event[i].addEventListener("click", function(ev) {
+                    ev.preventDefault();
+                    register.open();
+                }, false);
+            }
+
+            var event =[];
+            event= document.getElementsByName('showLeave');
+            for(var i=0;i<event.length;i++){
+                event[i].addEventListener("click", function(ev) {
+                    ev.preventDefault();
+                    leave.open();
+                }, false);
+            }
+
+            window.register = register;
+            window.leave = leave;
+        }
+
+        function jumpRegister(e) {
+            var i=e;
+            var inpatient=document.getElementById("inpatient")
+            var id=inpatient.rows[i].cells[1].innerHTML;//Name
+            var name=inpatient.rows[i].cells[2].innerHTML;
+            var wardNo=inpatient.rows[i].cells[5].innerHTML;
+            var bedNo=inpatient.rows[i].cells[6].innerHTML;
+            var startDate=inpatient.rows[i].cells[7].innerHTML;
+            document.getElementById("reg-id").value=id;
+            document.getElementById("reg-name").value=name;
+            document.getElementById("wardSelect").value=wardNo;
+            document.getElementById("bedSelect").value=bedNo;
+            document.getElementById("reg-inDate").value=startDate;
+
+        }
+
+        function jumpLeave(e) {
+            var i=e;
+            var inpatient=document.getElementById("inpatient")
+            var id=inpatient.rows[i].cells[1].innerHTML;//Name
+            var name=inpatient.rows[i].cells[2].innerHTML;
+            var startDate=inpatient.rows[i].cells[7].innerHTML;
+            var endDate=inpatient.rows[i].cells[8].innerHTML;
+            var tHos=inpatient.rows[i].cells[9].innerHTML;
+            document.getElementById("leave-id").value=id;
+            document.getElementById("leave-name").value=name;
+            document.getElementById("leave-inDate").value=startDate;
+            document.getElementById("leave-outDate").value=endDate;
+            document.getElementById("leave-trans").value=tHos;
+            console.log(tHos)
+            if(tHos!="None"){
+                document.getElementById("leaveSelect").value='t';
+                document.getElementById("transferHop").hidden=false;
+            }
+
+        }
+
+        function selectBed() {
+            var wardNo=document.getElementById("wardSelect").value
+            $.ajax({
+                url: "{{ url_for('nurse.patientlist') }}", //请求的url
+                type: 'post', //请求的方式
+                contentType: 'application/json; charset=UTF-8',
+                //data: $('#search').serialize(), //form表单里要提交的内容，里面的input等写上name就会提交，这是序列化
+                data: JSON.stringify(wardNo),
+                //dataType : 'json',
+                error:function (data) {
+
+                },
+                success:function (data) {
+                    console.log(data)
+                    var selectNow = document.getElementById("bedSelect");
+                    selectNow.innerHTML = "";
+                    for(var i=0;i<selectNow.childNodes.length;i++){
+                        selectNow.removeChild(area.options[0]);
+                        selectNow.remove(0);
+                        selectNow.options[0] = null;
+                    }
+                    for(var i in data){
+                        selectNow.options.add(new Option(data[i].bedNo,data[i].bedNo))
+                    }
+                }
+            });
+        }
+
+
+        function recordTransfer() {
+            var leave=document.getElementById("leaveSelect").value
+            if(leave=='t'){
+                document.getElementById("transferHop").hidden=false;
+            }
+            else{
+                document.getElementById("transferHop").hidden=true;
+            }
+        }
+
+
+    </script>
+
+</head>
+
+<body class="fix-header card-no-border fix-sidebar">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Hospital</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light">
+                <!-- ============================================================== -->
+                <!-- Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/home">
+                        <!-- Logo icon --><b>
+                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                            <!-- Dark Logo icon -->
+                            <img src="../../static/assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                            <!-- Light Logo icon -->
+                            <img src="../../static/assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text --><span>
+                         <!-- dark Logo text -->
+                         <img src="../../static/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                         <!-- Light Logo text -->
+                         <img src="../../static/assets/images/logo-light-text.png" class="light-logo" alt="homepage" /></span> </a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark" href="javascript:void(0)"><i class="fa fa-bars"></i></a> </li>
+                    </ul>
+                    <ul class="navbar-nav my-lg-0">
+                        <!-- ============================================================== -->
+                        <!-- Profile -->
+                        <!-- ============================================================== -->
+                        <div class="nav-item dropdown u-pro">
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href="{{ url_for('nurse.homepage') }}">{{ user.name }}</a>
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href="{{ url_for('auth.welcome') }}">Logout</a>
+
+                        </div>
+
+                    </ul>
+                </div>
+            </nav>
+        </header>f
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('nurse.homepageleader') }} aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Main</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('nurse.profile') }} aria-expanded="false"><i class="fa fa-user-circle-o"></i><span class="hide-menu">Profile</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('nurse.scheduleleader') }} aria-expanded="false"><i class="fa fa-table"></i><span class="hide-menu">Schedule</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('nurse.patientlist') }} aria-expanded="false"><i class="fa fa-smile-o"></i><span class="hide-menu">Inpatient List</span></a>
+                        </li>
+                    </ul>
+<!--                    <div class="text-center m-t-30">
+                        <a href="#" class="btn waves-effect waves-light btn-info hidden-md-down"> Upgrade to Pro</a>
+                    </div>-->
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-5 align-self-center">
+                        <h3 class="text-themecolor">InPatient Management</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">InPatient Management</li>
+                        </ol>
+                    </div><!--
+                    <div class="col-md-7 align-self-center">
+                        <a href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down"> Upgrade to Pro</a>
+                    </div>-->
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- column -->
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Inpatient List</h4>
+<!--                                <h6 class="card-subtitle">Add class <code>.table</code></h6-->
+                                <div class="table-responsive">
+                                    <table class="table" id="inpatient">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Patient ID</th>
+                                                <th style="width: 10%">Name</th>
+                                                <th style="width: 10%">Responsible Doctor</th>
+                                                <th style="width: 10%">Responsible Nurse</th>
+                                                <th>Ward No</th>
+                                                <th>Bed No</th>
+                                                <th>Start Date</th>
+                                                <th>End Date</th>
+                                                <th hidden>TransferHosp</th>
+                                                <th style="width: 30%; text-align: center">Option</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                {% for inpatient in inpatientList %}
+                                                <td>{{loop.index}}</td>
+                                                <td>{{inpatient.id}}</td>
+                                                <td>{{inpatient.patient.name}}</td>
+                                                <td>{{inpatient.doctor_ID}}</td>
+                                                <td>{{inpatient.nurse_ID}}</td>
+                                                <td>{{ inpatient.bed.ward_No }}</td>
+                                                <td>{{ inpatient.bedNo }}</td>
+                                                <td>{{inpatient.startDate}}</td>
+                                                <td>{{inpatient.endDate}}</td>
+                                                <td hidden>{{inpatient.transferHospital}}</td>
+                                                <td style="text-align: center">
+                                                    <div >
+                                                        {%  if inpatient.endDate == None %}
+                                                        <a onclick="jumpRegister({{loop.index}})" name="showRegister" href="#" class="btn btn-info"
+                                                           style="margin-right: 20px; background-color: #1aac26; border-color: #1aac26">
+                                                            Register
+                                                        </a>
+                                                        {% endif %}
+                                                        <a onclick="jumpLeave({{loop.index}})" name="showLeave" href="#" class="btn btn-info"
+                                                            style="background-color: #fb3a3a;border-color: #fb3a3a">
+                                                            Leave
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="register" class="modal">
+                        <div class="modal-dialog animated">
+                            <div class="modal-content">
+                                <form class="form-horizontal" method="post" action="{{url_for('nurse.register')}}">
+                                    <div class="modal-header">
+                                        <strong>Register</strong>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div>
+                                                <label for="reg-id" class="control-label col-xs-4" style="width: 30%">
+                                                    Patient ID:
+                                                </label>
+                                                <input type="text" name="reg-id" id="reg-id" class="form-control" readonly="readonly" style="width:30%"/>
+                                            </div>
+
+                                            <div style="margin-top: 20px">
+                                                <label for="reg-name" class="control-label col-xs-4" style="width: 30%">
+                                                    Patient Name:
+                                                </label>
+                                                <input type="text" name="reg-name" id="reg-name" class="form-control" readonly="readonly" style="width:30%"/>
+                                            </div>
+
+                                            <div style="margin-top: 20px">
+                                                <label for="reg-inDate" class="control-label col-xs-4" style="width: 30%">
+                                                    In Date:
+                                                </label>
+                                                <input type="date" name="reg-inDate" id="reg-inDate" class="form-control" style="width:40%"/>
+                                            </div>
+
+                                            <div style="margin-top: 20px">
+                                                <label class="control-label col-xs-4" style="width: 30%">
+                                                    Ward:
+                                                </label>
+                                                <select class="custom-select b-0" style="width: 40%" name="wardSelect" id="wardSelect" onchange="selectBed()">
+                                                    {% for ward in wardList %}
+                                                    <option value="{{ ward.wardNo }}">{{ ward.wardNo }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <div style="margin-top: 20px">
+                                                <label class="control-label col-xs-4" style="width: 30%" >
+                                                    Bed:
+                                                </label>
+                                                <select class="custom-select b-0" style="width: 40%"id="bedSelect" name="bedSelect">
+                                                    {% for bed in bedList %}
+                                                    <option value="{{ bed.bedNo }}">{{ bed.bedNo }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                            <div style="margin-top: 20px">
+                                                <label class="control-label col-xs-4" style="width: 30%">
+                                                    Responsible Nurse:
+                                                </label>
+                                                <select class="custom-select b-0" style="width: 40%" name="nurseSelect" id="nurseSelect">
+                                                    {% for nurse in nurseList %}
+                                                    <option value="{{ nurse.StaffID }}">{{ nurse.name }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" type="button" onclick="register.close();">Cancel</button>
+                                        <button class="btn btn-primary" style="background-color: #20aee3; border-color: #20aee3" type="submit" onclick="register.close();">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Prescription-->
+                    <div id="leave" class="modal">
+                        <div class="modal-dialog animated">
+                            <div class="modal-content">
+                                <form class="form-horizontal" method="post" action="{{url_for('nurse.leave')}}">
+                                    <div class="modal-header">
+                                        <strong>Leave Record</strong>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div>
+                                                <label for="leave-id" class="control-label col-xs-4" style="width: 30%">
+                                                    Patient ID:
+                                                </label>
+                                                <input type="text" name="leave-id" id="leave-id" class="form-control" readonly="readonly" style="width:30%"/>
+                                            </div>
+
+                                            <div style="margin-top: 20px">
+                                                <label for="leave-name" class="control-label col-xs-4" style="width: 30%">
+                                                    Patient Name:
+                                                </label>
+                                                <input type="text" name="leave-name" id="leave-name" class="form-control" readonly="readonly" style="width:30%"/>
+                                            </div>
+
+                                            <div style="margin-top: 20px">
+                                                <label for="leave-name" class="control-label col-xs-4" style="width: 30%">
+                                                    Reason To Leave:
+                                                </label>
+                                                <select class="custom-select b-0" style="width: 40%" id="leaveSelect" onchange="recordTransfer()">
+                                                    <option value="c">Cured</option>
+                                                    <option value="t">Transfer</option>
+                                                </select>
+                                            </div>
+                                            <div hidden style="margin-top: 20px" id="transferHop">
+                                                <label for="leave-outDate" class="control-label col-xs-4" style="width: 30%">
+                                                    Transfer Hospital:
+                                                </label>
+                                                <input type="text" name="leave-trans" id="leave-trans" class="form-control" style="width:40%"/>
+                                            </div>
+
+                                            <div hidden style="margin-top: 20px">
+                                                <label for="leave-inDate" class="control-label col-xs-4" style="width: 30%">
+                                                    Start Date:
+                                                </label>
+                                                <input type="date" name="leave-inDate" id="leave-inDate" class="form-control" style="width:40%"/>
+                                            </div>
+
+                                            <div style="margin-top: 20px">
+                                                <label for="leave-outDate" class="control-label col-xs-4" style="width: 30%">
+                                                    Leave Date:
+                                                </label>
+                                                <input type="date" name="leave-outDate" id="leave-outDate" class="form-control" style="width:40%"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" type="button" onclick="leave.close();">Cancel</button>
+                                        <button class="btn btn-primary" style="background-color: #20aee3; border-color: #20aee3" type="submit" onclick="leave.close();">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+          <script src="{{url_for('static', filename='assets/node_modules/jquery/jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/popper.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/bootstrap.min.js')}}" ></script>
+
+     <script src="{{url_for('static', filename='html/js/perfect-scrollbar.jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/waves.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/sidebarmenu.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/custom.min.js')}}" ></script>
+
+     <script src="{{url_for('static', filename='assets/node_modules/peity/jquery.peity.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/peity/jquery.peity.init.js')}}" ></script>
+
+{#    <script src="../../static/assets/node_modules/jquery/jquery.min.js"></script>#}
+{#    <!-- Bootstrap tether Core JavaScript -->#}
+{#    <script src="../../static/assets/node_modules/bootstrap/js/popper.min.js"></script>#}
+{#    <script src="../../static/assets/node_modules/bootstrap/js/bootstrap.min.js"></script>#}
+{#    <!-- slimscrollbar scrollbar JavaScript -->#}
+{#    <script src="../../static/html/js/perfect-scrollbar.jquery.min.js"></script>#}
+{#    <!--Wave Effects -->#}
+{#    <script src="../../static/html/js/waves.js"></script>#}
+{#    <!--Menu sidebar -->#}
+{#    <script src="../../static/html/js/sidebarmenu.js"></script>#}
+{#    <!--Custom JavaScript -->#}
+{#    <script src="../../static/html/js/custom.min.js"></script>#}
+{#    <!-- jQuery peity -->#}
+{#    <script src="../../static/assets/node_modules/peity/jquery.peity.min.js"></script>#}
+{#    <script src="../../static/assets/node_modules/peity/jquery.peity.init.js"></script>#}
+</body>
+
+</html>

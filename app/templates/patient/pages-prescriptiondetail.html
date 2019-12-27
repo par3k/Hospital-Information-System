@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='static/assets/images/favicon.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/bootstrap/css/bootstrap.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/perfect-scrollbar/css/perfect-scrollbar.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/morrisjs/morris.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/c3-master/c3.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/style.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/pages/dashboard1.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/colors/default.css') }}"/>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    {% if title %}
+        <title>HIS - {{ title }}</title>
+    {% else %}
+        <title>Hospital Information System</title>
+    {% endif %}
+</head>
+
+<body class="fix-header card-no-border fix-sidebar">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Admin Wrap</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light">
+                <!-- ============================================================== -->
+                <!-- Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href={{ url_for('patient.homepage') }}>
+                        <!-- Logo icon --><b>
+                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                            <!-- Dark Logo icon -->
+                            <img src="../../static/assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                            <!-- Light Logo icon -->
+                            <img src="../../static/assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text --><span>
+                         <!-- dark Logo text -->
+                         <img src="../../static/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                         <!-- Light Logo text -->
+                         <img src="../../static/assets/images/logo-light-text.png" class="light-logo" alt="homepage" /></span> </a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse">
+                    <!-- ============================================================== -->
+                    <!-- toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav mr-auto"></ul>
+                    <!-- ============================================================== -->
+                    <!-- User profile and search -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav my-lg-0">
+                        <!-- ============================================================== -->
+                        <!-- Profile -->
+                        <!-- ============================================================== -->
+                        <div class="nav-item dropdown u-pro">
+                            {% if current_user.is_authenticated %}
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href={{ url_for('patient.patient_account') }}>{{ current_user.name }}</a>
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href={{ url_for('patient.patient_logout') }}>Logout</a>
+                            {% else %}
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href={{ url_for('patient.patient_register') }}>Register</a>
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href={{ url_for('patient.patient_login') }}>Login</a>
+                            {% endif %}
+                        </div>
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('patient.patient_medicine') }} aria-expanded="false"><i class="fa fa-medkit"></i><span class="hide-menu">Medicine Information</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('patient.prescriptiondetail') }} aria-expanded="false"><i class="fa fa-credit-card"></i><span class="hide-menu">Prescription Detail</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href="{{ url_for('patient.prescriptionrecord') }}" aria-expanded="false"><i class="fa fa-list"></i><span class="hide-menu">Prescription Record</span></a>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+            {% block content %}
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-5 align-self-center">
+                        <h3 class="text-themecolor">Prescription</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href={{ url_for('patient.homepage') }}>Home</a></li>
+                            <li class="breadcrumb-item active">Prescription</li>
+                        </ol>
+                    </div>
+<!--                    <div class="col-md-7 align-self-center">-->
+<!--                        <a href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down"> Upgrade to Pro</a>-->
+<!--                    </div>-->
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <!-- Row -->
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-lg-4 col-xlg-3 col-md-5" style="background-color: #ffffff ">
+
+                        <table id="table1" onclick="subForm()" class="table">
+                            <thead>
+                                <tr>
+                                    <th>PrescriptionID</th>
+                                    <th>PaymentCondition</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+
+                            {%for prescription1 in prescription %}
+                                {% if current_user.name == prescription1.name  %}
+                                <tr>
+                                    <td>{{ prescription1.prescriptionID}} </td>
+                                    {% if prescription1.paymentStatues=='y' %}
+                                        <td>YES</td>
+                                    {% else %}
+                                        <td>NO</td>
+                                    {% endif %}
+                                </tr>
+                                {% endif %}
+                            {%endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Column -->
+                    <!-- Column -->
+                    <div class="col-lg-8 col-xlg-9 col-md-7">
+                        <div class="card">
+                            <!-- Tab panes -->
+                            <div class="card-body">
+                                <table id="table2" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>MedicineID</th>
+                                                <th>MedicineName</th>
+                                                <th>Price</th>
+                                                <th>Quantity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody">
+                                        </tbody>
+                                </table>
+                                    <form id="form1" action="{{ url_for('patient.givemedicine') }}" , method="post" >
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- Column -->
+                </div>
+                <!-- Row -->
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+           {% endblock %}
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script>
+            function subForm() {
+                 var td = event.srcElement;
+                 var index=td.parentElement.rowIndex
+                 var i=index;
+                 var pid=document.getElementById("table1").rows[i].cells[0].innerHTML;
+                 var pay=document.getElementById("table1").rows[i].cells[1].innerHTML;
+                 console.log(pid)
+                console.log(pay)
+                 var data={
+                'pid':pid
+                };
+                $.ajax({
+                    url: "{{ url_for('patient.searchpre') }}",
+                    type: 'post',
+                    contentType: 'application/json; charset=UTF-8',
+                    data: JSON.stringify(data),
+                    dataType : 'json',
+                    error:function (data) {
+                        console.log(data)
+                        alert('Can not load data');
+                    },
+                    success:function (data) {
+                        console.log(data)
+                        $("#pid").val(pid);
+                        $("#table2").html("");
+                        str="<thead>"+
+                                "<tr>"+
+                                    "<th>MedicineID</th>"+
+                                    "<th>MedicineName</th>"+
+                                    "<th>Price</th>"+
+                                    "<th>Quantity</th>"+
+                                "</tr>"+
+                            "</thead>"+
+                            "<tbody>"
+                        $("#table2").append(str);
+                        for (var prop in data) {
+                            console.log(data[prop]);
+                        }
+                        for(var i in data){
+                            str1 =
+                                "<tr>" +
+                                "<td>"+data[i]['mid']+ "</td>" +
+                                "<td>"+data[i]['name']+ "</td>" +
+                                "<td>"+data[i]['price']+ "</td>" +
+                                "<td>"+data[i]['quantity']+ "</td>" +
+                                "</tr>";
+                            $("#table2").append(str1);
+                        }
+
+
+                        $("#table2").append("</tbody>");
+                        console.log(pay)
+
+                        if(pay=='NO'){
+                            $("#form1").html("");
+                             str2="<input type=\"hidden\" name=\"pid\" id=\"pid\" value=\"1111\">"+
+                                 "<div class=\"col-sm-12\" style=\"float: right\">\n" +
+                            "<button type=\"submit\" class=\"btn btn-success\" style=\"float: right\"> Pay the Bill</button>\n" +
+                            "</div>";
+                        $("#form1").append(str2);
+                        $("#pid").val(pid);
+                        }
+                        else {
+                            $("#form1").html("");
+                        }
+                    }
+                });
+            }
+    </script>
+     <script src="{{url_for('static', filename='assets/node_modules/jquery/jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/popper.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/bootstrap.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/perfect-scrollbar.jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/waves.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/sidebarmenu.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/custom.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/peity/jquery.peity.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/peity/jquery.peity.init.js')}}" ></script>
+</body>
+
+
+
+</html>

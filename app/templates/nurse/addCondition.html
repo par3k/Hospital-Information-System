@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='static/assets/images/favicon.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/bootstrap/css/bootstrap.min.css') }}"/>
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/style.css') }}"/>
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/rmodal-no-bootstrap.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/colors/default.css') }}"/>
+     <script src="{{url_for('static', filename='html/js/rmodal.js')}}" ></script>
+    <title>Hospital Information System</title>
+{#    <link rel="icon" type="image/png" sizes="16x16" href="../../static/assets/images/favicon.png">#}
+{#    <title>Hospital Information System</title>#}
+{#    <!-- Bootstrap Core CSS -->#}
+{#    <link href="../../static/assets/node_modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">#}
+{#    <!-- Custom CSS -->#}
+{#    <link href="../../static/html/css/style.css" rel="stylesheet">#}
+{#    <!-- You can change the theme colors from here -->#}
+{#    <link href="../../static/html/css/colors/default.css" id="theme" rel="stylesheet">#}
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+
+<!--    <link href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/animate.css/3.5.2/animate.min.css">-->
+
+    <link rel="stylesheet" href="../../static/html/css/rmodal-no-bootstrap.css" type="text/css" />
+    <script type="text/javascript" src="../../static/html/js/rmodal.js"></script>
+    <script type="text/javascript">
+        window.onload = function() {
+            var addCondition = new RModal(document.getElementById('addCondition'), {
+                beforeOpen: function(next) {
+                    console.log('beforeOpen');
+                    next();
+                }
+                , afterOpen: function() {
+                    console.log('opened');
+                }
+
+                , beforeClose: function(next) {
+                    console.log('beforeClose');
+                    next();
+                }
+                , afterClose: function() {
+                    console.log('closed');
+                }
+            });
+
+            document.addEventListener('keydown', function(ev) {
+                addCondition.keydown(ev);
+            }, false);
+
+            document.getElementById('showAddRecord').addEventListener("click", function(ev) {
+                ev.preventDefault();
+                addCondition.open();
+            }, false);
+
+            window.addCondition = addCondition;
+        }
+
+        function jumpCondition() {
+            var day2 = new Date();
+            day2.setTime(day2.getTime());
+            var s2 = day2.getFullYear()+"-" + (day2.getMonth()+1) + "-" + day2.getDate();
+            console.log(s2)
+            document.getElementById('record-date').value=s2;
+        }
+
+        function submitcon() {
+            var id=document.getElementById('reg-id').value;
+            var name=document.getElementById('reg-name').value;
+            var data=[id,name]
+            window.location.href="{{ url_for('nurse.addcondition', data="x") }}".replace("x",data);
+        }
+    </script>
+
+</head>
+
+<body class="fix-header card-no-border fix-sidebar">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Hospital</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light">
+                <!-- ============================================================== -->
+                <!-- Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/home">
+                        <!-- Logo icon --><b>
+                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                            <!-- Dark Logo icon -->
+                            <img src="../../static/assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                            <!-- Light Logo icon -->
+                            <img src="../../static/assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text --><span>
+                         <!-- dark Logo text -->
+                         <img src="../../static/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                         <!-- Light Logo text -->
+                         <img src="../../static/assets/images/logo-light-text.png" class="light-logo" alt="homepage" /></span> </a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark" href="javascript:void(0)"><i class="fa fa-bars"></i></a> </li>
+                    </ul>
+                    <ul class="navbar-nav my-lg-0">
+                        <!-- ============================================================== -->
+                        <!-- Profile -->
+                        <!-- ============================================================== -->
+                        <div class="nav-item dropdown u-pro">
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href="{{ url_for('nurse.homepage') }}">{{ user.name }}</a>
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href="{{ url_for('auth.welcome') }}">Logout</a>
+
+                        </div>
+
+                    </ul>
+                </div>
+            </nav>
+        </header>f
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('nurse.homepage') }} aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Main</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('nurse.profile') }} aria-expanded="false"><i class="fa fa-user-circle-o"></i><span class="hide-menu">Profile</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('nurse.schedule') }} aria-expanded="false"><i class="fa fa-table"></i><span class="hide-menu">Schedule</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('nurse.recordcondition') }} aria-expanded="false"><i class="fa fa-check-square"></i></i><span class="hide-menu">Condition Record</span></a>
+                        </li>
+                    </ul>
+<!--                    <div class="text-center m-t-30">
+                        <a href="#" class="btn waves-effect waves-light btn-info hidden-md-down"> Upgrade to Pro</a>
+                    </div>-->
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-5 align-self-center">
+                        <h3 class="text-themecolor">Condition Recording</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active"><a href="recordCondition.html">Condition Recording</a></li>
+                            <li class="breadcrumb-item active">Add Record</li>
+                        </ol>
+                    </div><!--
+                    <div class="col-md-7 align-self-center">
+                        <a href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down"> Upgrade to Pro</a>
+                    </div>-->
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- column -->
+                    <div class="col-12">
+                        <div class="form-group">
+                            <div style="margin-top: 20px">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div>
+                                            <label for="reg-id" class="control-label col-xs-4" style="width: 30%">
+                                                Patient ID:
+                                            </label>
+                                            <input type="text" name="reg-id" id="reg-id" value={{ pId }} class="form-control" readonly="readonly" style="width:30%"/>
+                                        </div>
+
+                                        <div style="margin-top: 20px">
+                                            <label for="reg-name" class="control-label col-xs-4" style="width: 30%">
+                                                Patient Name:
+                                            </label>
+                                            <input type="text" name="reg-name" id="reg-name" value={{ pName }} class="form-control" readonly="readonly" style="width:30%"/>
+                                        </div>
+                                        <div style="float: left;margin-bottom: 10px;margin-top: 10px">
+                                            <a onclick="jumpCondition()" id="showAddRecord" href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down">
+                                                Add Record
+                                            </a>
+                                        </div>
+                                        <div class="table-responsive">
+
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width:10%">#</th>
+                                                    <th style="width:20%">Date</th>
+                                                    <th>Condition</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {% for condition in conditionList %}
+                                                <tr>
+                                                     <td>{{loop.index}}</td>
+                                                     <td>{{condition.date}}</td>
+                                                    <td>{{condition.conditionDesc}}</td>
+                                                </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div style="float: right;margin-bottom: 10px;margin-top: 10px">
+                                            <a id="back" href="{{ url_for('nurse.recordcondition') }}" class="btn
+                                               waves-effect waves-light btn btn-info pull-right hidden-sm-down "
+                                                style="float: right" >
+                                                Back
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="addCondition" class="modal">
+                            <div class="modal-dialog animated">
+                                <div class="modal-content">
+                                    <form action=" " class="form-horizontal" method="post" id="form_condition">
+                                        <div class="modal-header">
+                                            <strong>New Condition Record</strong>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <div class="form-group">
+                                                <div style="margin-top: 20px">
+                                                    <label for="record-date" class="control-label col-xs-4" style="width: 30%">
+                                                        Date:
+                                                    </label>
+                                                    <input type="date" name="record-date" id="record-date" class="form-control" style="width:40%"/>
+                                                </div>
+                                                <div style="margin-top: 20px">
+                                                    <label for="record-des" class="control-label col-xs-4" style="width: 30%">
+                                                        Condition:
+                                                    </label>
+                                                    <textarea rows="5" name="record-des" id="record-des" class="form-control"></textarea>
+                                                    {#<label for="condition" class="control-label col-xs-4" style="width: 30%">
+                                                        Condition:
+                                                    </label>#}
+                                                    {#<textarea id="record-condition" rows="5" class="form-control"></textarea>#}
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button class="btn btn-default" type="button" onclick="addCondition.close();">Cancel</button>
+                                            <button class="btn btn-primary" style="background-color: #20aee3; border-color: #20aee3" type="submit" onclick="addCondition.close(); submitcon()">Save</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+     <script src="{{url_for('static', filename='assets/node_modules/jquery/jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/popper.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/bootstrap.min.js')}}" ></script>
+
+     <script src="{{url_for('static', filename='html/js/perfect-scrollbar.jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/waves.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/sidebarmenu.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/custom.min.js')}}" ></script>
+
+     <script src="{{url_for('static', filename='assets/node_modules/peity/jquery.peity.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/peity/jquery.peity.init.js')}}" ></script>
+{#    <script src="../../static/assets/node_modules/jquery/jquery.min.js"></script>#}
+{#    <!-- Bootstrap tether Core JavaScript -->#}
+{#    <script src="../../static/assets/node_modules/bootstrap/js/popper.min.js"></script>#}
+{#    <script src="../../static/assets/node_modules/bootstrap/js/bootstrap.min.js"></script>#}
+{#    <!-- slimscrollbar scrollbar JavaScript -->#}
+{#    <script src="../../static/html/js/perfect-scrollbar.jquery.min.js"></script>#}
+{#    <!--Wave Effects -->#}
+{#    <script src="../../static/html/js/waves.js"></script>#}
+{#    <!--Menu sidebar -->#}
+{#    <script src="../../static/html/js/sidebarmenu.js"></script>#}
+{#    <!--Custom JavaScript -->#}
+{#    <script src="../../static/html/js/custom.min.js"></script>#}
+{#    <!-- jQuery peity -->#}
+{#    <script src="../../static/assets/node_modules/peity/jquery.peity.min.js"></script>#}
+{#    <script src="../../static/assets/node_modules/peity/jquery.peity.init.js"></script>#}
+</body>
+
+</html>

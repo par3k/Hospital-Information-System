@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>HIS</title>
+    <link rel="shortcut icon"   href="{{ url_for('static',filename='images/favicon.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='css1/icons.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css1/easy-responsive-tabs.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css1/flexslider.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css1/owl.carousel.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css1/ie7/ie7.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css1/style.css') }}"/>
+
+    <link rel="shortcut icon" href="images/favicon.png" />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="css/icons.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="css/easy-responsive-tabs.css " />
+    <link rel="stylesheet" type="text/css" href="css/flexslider.css " />
+    <link rel="stylesheet" type="text/css" href="css/owl.carousel.css">
+    <!--[if lt IE 8]><!-->
+    <link rel="stylesheet" href="ie7/ie7.css">
+    <!--<![endif]-->
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body data-spy="scroll" data-target=".navbar-fixed-top">
+    <header>
+        <div class="top-bar">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-6 address">
+                        <i class="ti-location-pin"></i> No.3 Shangyuancun Haidian District
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <a class="navbar-brand" href="index.html">
+                        Group 7<span>Hospital</span>
+                    </a>
+                    <p>Call Us Now <b>+010 3624 4579</b></p>
+                </div>
+                <div class="collapse navbar-collapse navbar-main-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="{{ url_for('patient.patient_login') }}" class="btn-default">Log in</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('auth.login') }}" class="btn-default">Log in As Staff</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="clear"></div>
+    <div id="page-content">
+        <section class="flexslider">
+            <ul class="slides">
+                <li>
+                    <img src="{{url_for('static',filename='images/slider-img.jpg')}}" />
+
+                    <div class="slide-info">
+                        <div class="slide-con">
+                            <b>Nurse</b>
+                            <h3>Purpose of our service</h3>
+                            <p>Try our best to serve our patients. Make them feel like they are at home.</p>
+                            <a href="#" class="ti-arrow-right"></a>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <img src="{{url_for('static', filename='images/slider-img1.jpg')}}" />
+                    <div class="slide-info">
+                        <div class="slide-con">
+                            <b>Doctor</b>
+                            <h3>Professional</h3>
+                            <p>We have professional doctors in different departments. And we are eager to provide our best service</p>
+                            <a href="#" class="ti-arrow-right"></a>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <img src="{{url_for('static', filename='images/slider-img2.jpg')}}" />
+                    <div class="slide-info">
+                        <div class="slide-con">
+                            <b>Patient</b>
+                            <h3>Choose us</h3>
+                            <p>Choose us means choose the best medical care in the city.</p>
+                            <a href="#" class="ti-arrow-right"></a>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </section>
+        <div class="container">
+            <div class="row">
+                <section class="col-sm-7 col-md-8 col-lg-8" style="width:100%">
+                    <div class="intro">
+                        <h2>Welcome to Group7 Hospital</h2>
+                        <p>We will try our best to give you the best service. We will provide the professional service in many fields. Choose us will be a wise choice</p>
+                        <ul class="row">
+                            <li class="col-sm-4">
+                                <i class="fa fa-life-ring"></i>
+                                <h3>24x7 Support</h3>
+                                <p>Whenever you come, we will be here.</p>
+                            </li>
+                            <li class="col-sm-4">
+                                <i class="ti-marker-alt"></i>
+                                <h3>Easy Claim system</h3>
+                                <p>All medical staffs and patients can use our system to make their process of seeing a doctor more convenient.</p>
+                            </li>
+                            <li class="col-sm-4">
+                                <i class="ti-email"></i>
+                                <h3>Get Started with us</h3>
+                                <p>Register quickly and experience our service.</p>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+                <!--<section class="col-sm-5 col-md-4 col-lg-4">
+                    <div class="get-quote-form">
+                        <h2>Get a free quote form</h2>
+                        <form id="get-quote">
+                            <div>
+                                <input type="text" name="name" placeholder="Your Name" />
+                            </div>
+                            <div>
+                                <input type="text" name="email" placeholder="Email" />
+                            </div>
+                            <div>
+                                <input type="text" name="ph-no" placeholder="Phone no" />
+                            </div>
+                            <div class="form-select">
+                                <span></span>
+                                <select>
+                                    <option>Product</option>
+                                </select>
+                            </div>
+                            <div>
+                                <textarea rows="1" cols="1" placeholder="Message"></textarea>
+                            </div>
+                            <div class="text-center">
+                                <input type="submit" class="btn-default" value="Get Free Quote" />
+                            </div>
+                        </form>
+                    </div>
+                </section>-->
+            </div>
+        </div>
+        <div class="tlinks">Collect from <a href="http://www.cssmoban.com/"  title="网站模板">网站模板</a></div>
+        <!--<section class="product-tab">
+            <div class="container">
+                <div class="row">
+                    <div id="parentVerticalTab">
+                        <h2>Products</h2>
+                        <ul class="resp-tabs-list hor_1 col-sm-3 col-md-3 col-lg-3">
+                            <li><i class="ti-home"></i> House Insurance</li>
+                            <li><i class="fa fa-plane"></i> Travel Insurance</li>
+                            <li><i class="ti-heart-broken"></i> Life Insurance</li>
+                            <li><i class="ti-car"></i> Car Insurance</li>
+                        </ul>
+                        <div class="col-sm-5 col-md-5 col-lg-5 resp-tabs-container hor_1">
+                            <div>
+                                <div class="prod-tab-content">
+                                    <h4>
+                                        <span class="prod-cion"><i class="ti-home"></i></span>
+                                        House Insurance
+                                    </h4>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nibh urna, euismod ut ornare non, volutpat vel tortor. Integer</p>
+                                    <p>et placerat suscipit. Sed sodales scelerisque commodo. Nam porta cursus lectus. </p>
+                                    <p class="tel">
+                                        <i class="fa fa-phone"></i> +123 456 7890 <span>Toll Free</span>
+                                    </p>
+                                    <p>
+                                        <a class="btn-default" href="product-houseinsurance.html">Get Free Quote</a>
+                                    </p>
+                                </div>
+                                <img src="images/product-img.jpg" alt="" class="img-responsive" />
+                            </div>
+                            <div>
+                                <div class="prod-tab-content">
+                                    <h4>
+                                        <span class="prod-cion"><i class="fa fa-plane"></i></span>
+                                        Travel Insurance
+                                    </h4>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nibh urna, euismod ut ornare non, volutpat vel tortor. Integer</p>
+                                    <p>et placerat suscipit. Sed sodales scelerisque commodo. Nam porta cursus lectus. </p>
+                                    <p class="tel">
+                                        <i class="fa fa-phone"></i> +123 456 7890 <span>Toll Free</span>
+                                    </p>
+                                    <p>
+                                        <a class="btn-default" href="#">Get Free Quote</a>
+                                    </p>
+                                </div>
+                                <img src="images/1.jpg" alt="" class="img-responsive" />
+                            </div>
+                            <div>
+                                <div class="prod-tab-content">
+                                    <h4>
+                                        <span class="prod-cion"><i class="ti-heart-broken"></i></span>
+                                        Life Insurance
+                                    </h4>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nibh urna, euismod ut ornare non, volutpat vel tortor. Integer</p>
+                                    <p>et placerat suscipit. Sed sodales scelerisque commodo. Nam porta cursus lectus. </p>
+                                    <p class="tel">
+                                        <i class="fa fa-phone"></i> +123 456 7890 <span>Toll Free</span>
+                                    </p>
+                                    <p>
+                                        <a class="btn-default" href="#">Get Free Quote</a>
+                                    </p>
+                                </div>
+                                <img src="images/3.jpg" alt="" class="img-responsive" />
+                            </div>
+                            <div>
+                                <div class="prod-tab-content">
+                                    <h4>
+                                        <span class="prod-cion"><i class="ti-car"></i></span>
+                                        Car Insurance
+                                    </h4>
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum nibh urna, euismod ut ornare non, volutpat vel tortor. Integer</p>
+                                    <p>et placerat suscipit. Sed sodales scelerisque commodo. Nam porta cursus lectus. </p>
+                                    <p class="tel">
+                                        <i class="fa fa-phone"></i> +123 456 7890 <span>Toll Free</span>
+                                    </p>
+                                    <p>
+                                        <a class="btn-default" href="#">Get Free Quote</a>
+                                    </p>
+                                </div>
+                                <img src="images/2.jpg" alt="" class="img-responsive" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>-->
+        <!--<section class="services">
+            <h2 class="text-center">Our Best Services</h2>
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-3 services-dtl">
+                        <span class="fa fa-life-bouy"></span>
+                        <h3>24x7 Support</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur</p>
+                    </div>
+                    <div class="col-sm-3 services-dtl">
+                        <span class="ti-pencil"></span>
+                        <h3>Easy Claim System</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur</p>
+                    </div>
+                    <div class="col-sm-3 services-dtl">
+                        <span class="ti-email"></span>
+                        <h3>Get Started With us</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur</p>
+                    </div>
+                    <div class="col-sm-3 services-dtl">
+                        <span class="fa fa-money"></span>
+                        <h3>Easy Installments</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur</p>
+                    </div>
+                    <div class="col-sm-3 services-dtl">
+                        <span class="ti-wallet"></span>
+                        <h3>Lorem Ipsum</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur</p>
+                    </div>
+                    <div class="col-sm-3 services-dtl">
+                        <span class="fa fa-laptop"></span>
+                        <h3>Online Account</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur</p>
+                    </div>
+                    <div class="col-sm-3 services-dtl">
+                        <span class="ti-lock"></span>
+                        <h3>Strongly Secure</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur</p>
+                    </div>
+                    <div class="col-sm-3 services-dtl">
+                        <span class="ti-book"></span>
+                        <h3>Understandable Terms</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur</p>
+                    </div>
+                </div>
+            </div>
+        </section>-->
+        <section class="testimonials">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <h2 class="text-center">Our Most Popular Doctor</h2>
+                        <div class="testimonial-tab">
+                            <div class="testimonials-tab-list">
+                                <ul>
+                                    <li>
+                                        <a href="javascript:void(0);" data-tab="tab1"><img src="{{url_for('static', filename='images/agent1.jpg')}}" alt="Client" /></a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" data-tab="tab2"><img src="{{url_for('static', filename='images/agent2.jpg')}}" alt="Client" /></a>
+                                    </li>
+                                    <li class="active">
+                                        <a href="javascript:void(0);" data-tab="tab3"><img src="{{url_for('static', filename='images/agent3.jpg')}}" alt="Client" /></a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" data-tab="tab4"><img src="{{url_for('static', filename='images/agent4.jpg')}}" alt="Client" /></a>
+                                    </li>
+                                    <li>
+                                        <a href="javascript:void(0);" data-tab="tab5"><img src="{{url_for('static', filename='images/agent5.jpg')}}" alt="Client" /></a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="testimonials-tab-content">
+                                <div class="clearfix testimonial-con" id="testimonial-tab1">
+                                    <h3>{{ doctorlist[0][0] }}<br /><span>{{ doctorlist[0][1] }}</span></h3>
+                                    <i class="fa fa-quote-left left-quote"></i>
+                                    <p class="col-sm-offset-1 col-sm-10"> Very professional and patient</p>
+                                    <i class="fa fa-quote-right right-quote"></i>
+                                </div>
+                                <div class="clearfix testimonial-con" id="testimonial-tab2">
+                                    <h3>{{ doctorlist[1][0] }}<br /><span>{{ doctorlist[1][1] }}</span></h3>
+                                    <i class="fa fa-quote-left left-quote"></i>
+                                    <p class="col-sm-offset-1 col-sm-10">With ten years experience in this field</p>
+                                    <i class="fa fa-quote-right right-quote"></i>
+                                </div>
+                                <div class="clearfix testimonial-con" id="testimonial-tab3">
+                                    <h3>{{ doctorlist[2][0] }}<br /><span>{{ doctorlist[2][1] }}</span></h3>
+                                    <i class="fa fa-quote-left left-quote"></i>
+                                    <p class="col-sm-offset-1 col-sm-10">Very Nice</p>
+                                    <i class="fa fa-quote-right right-quote"></i>
+                                </div>
+                                <div class="clearfix testimonial-con" id="testimonial-tab4">
+                                    <h3>{{ doctorlist[3][0] }}<br /><span>{{ doctorlist[3][1] }}</span></h3>
+                                    <i class="fa fa-quote-left left-quote"></i>
+                                    <p class="col-sm-offset-1 col-sm-10">Hard Working</p>
+                                    <i class="fa fa-quote-right right-quote"></i>
+                                </div>
+                                <div class="clearfix testimonial-con" id="testimonial-tab5">
+                                    <h3>{{ doctorlist[4][0] }}<br /><span>{{ doctorlist[4][1] }}</span></h3>
+                                    <i class="fa fa-quote-left left-quote"></i>
+                                    <p class="col-sm-offset-1 col-sm-10">One of the best doctor!</p>
+                                    <i class="fa fa-quote-right right-quote"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="recent-news">
+            <h2 class="text-center">Recent Notification</h2>
+            <div class="container">
+                <div class="row">
+                    {% for notice in notice %}
+                    <div class="col-sm-6 col-md-3">
+                        <div class="news-sec-box">
+                            <span class="ti-pencil"></span>
+                            <h3><a href="#">{{notice.postTitle}}</a></h3>
+                            <p>{{notice.postContent}}</p>
+                            <p>{{notice.postDate}}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+{#                    <div class="col-sm-6 col-md-3">#}
+{#                        <div class="news-sec-box">#}
+{#                            <span class="ti-image"></span>#}
+{#                            <h3><a href="#">Free Sound Effects for Games, Apps & UI</a></h3>#}
+{#                            <p>24 Dec 2015</p>#}
+{#                            <div class="news-by">#}
+{#                                <a href="#"><img src="{{url_for('static', filename='images/people-03.jpg')}}" /></a>#}
+{#                                <a href="#">By Linda</a>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-sm-6 col-md-3">#}
+{#                        <div class="news-sec-box">#}
+{#                            <span class="ti-comments"></span>#}
+{#                            <h3><a href="#">Free Sound Effects for Games, Apps & UI</a></h3>#}
+{#                            <p>24 Dec 2015</p>#}
+{#                            <div class="news-by">#}
+{#                                <a href="#"><img src="{{url_for('static', filename='images/people-03.jpg')}}" /></a>#}
+{#                                <a href="#">By Linda</a>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <div class="col-sm-6 col-md-3">#}
+{#                        <div class="news-sec-box">#}
+{#                            <span class="ti-control-play"></span>#}
+{#                            <h3><a href="#">Free Sound Effects for Games, Apps & UI</a></h3>#}
+{#                            <p>24 Dec 2015</p>#}
+{#                            <div class="news-by">#}
+{#                                <a href="#"><img src="{{url_for('static', filename='images/people-03.jpg')}}" /></a>#}
+{#                                <a href="#">By Linda</a>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+                </div>
+            </div>
+        </section>
+        <!--<section class="partners">
+            <div class="container">
+                <div class="row">
+                    <div class="parner-slider-mn">
+                        <div class="col-sm-3">
+                            <h2>
+                                <b>Insurance</b> Partners
+                            </h2>
+                        </div>
+                        <div class="col-sm-9">
+                            <div class="partner-slider owl-carousel">
+                                <div>
+                                    <div class="partner-logo">
+                                        <p><img src="images/partner-logo-01.jpg" alt="Partner" /></p>
+                                    </div>
+                                    <div class="partner-logo">
+                                        <p><img src="images/partner-logo-04.jpg" alt="Partner" /></p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="partner-logo">
+                                        <p><img src="images/partner-logo-02.jpg" alt="Partner" /></p>
+                                    </div>
+                                    <div class="partner-logo">
+                                        <p><img src="images/partner-logo-05.jpg" alt="Partner" /></p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="partner-logo">
+                                        <p><img src="images/partner-logo-03.jpg" alt="Partner" /></p>
+                                    </div>
+                                    <div class="partner-logo">
+                                        <p><img src="images/partner-logo-06.jpg" alt="Partner" /></p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="partner-logo">
+                                        <p><img src="images/partner-logo-04.jpg" alt="Partner" /></p>
+                                    </div>
+                                    <div class="partner-logo">
+                                        <p><img src="images/partner-logo-01.jpg" alt="Partner" /></p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="partner-logo">
+                                        <p><img src="images/partner-logo-05.jpg" alt="Partner" /></p>
+                                    </div>
+                                    <div class="partner-logo">
+                                        <p><img src="images/partner-logo-02.jpg" alt="Partner" /></p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="partner-logo">
+                                        <p><img src="images/partner-logo-06.jpg" alt="Partner" /></p>
+                                    </div>
+                                    <div class="partner-logo">
+                                        <p><img src="images/partner-logo-03.jpg" alt="Partner" /></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </section>-->
+    </div>
+    <div class="clear"></div>
+    <!--<footer>
+        <div class="container">
+            <div class="row contact-sec">-->
+                <!--<div class="col-md-5 col-lg-5">
+                    <h2>Group7<span>Hospital</span></h2>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p>No.3 Shangyuancun, Haidian District
+                                <br/>Zip - 100044</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <ul>
+                                <li><a href="#"><i class="fa fa-phone"></i> +010 1234 5678</a></li>
+                                <li><a href="#"><i class="ti-email"></i> info@group7.com</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <a href="#" class="btn-default">Contact Us</a>
+                </div>-->
+                <!--<div class="col-md-5 col-lg-5 col-md-offset-2 col-lg-offset-2">
+                    <h2>Agent<span>Detail</span></h2>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <p>No.3 Shangyuancun, Haidian District
+                                <br/>Zip - 100044</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <ul>
+                                <li><a href="#"><i class="fa fa-phone"></i> +010 1234 5678</a></li>
+                                <li><a href="#"><i class="ti-email"></i> info@group7.com</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <a href="#" class="btn-default">Contact Agent</a>
+                </div>-->
+<!--            </div>
+        </div>-->
+            <!--<div class="row">
+                <div class="col-md-8 col-lg-8">
+                    <ul class="footer-nav">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="#">Compnies represented</a></li>
+                        <li><a href="contact-us.html">Contact us</a></li>
+                        <li><a href="#">Services</a></li>
+                        <li><a href="#">Products</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2 col-lg-2 col-md-offset-2 col-lg-offset-2">
+                    <ul class="footer-social">
+                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+                        <li><a href="#"><i class="fa fa-pinterest"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>-->
+<!--    </footer>-->
+{#    <script src="js/jquery.min.js"></script>#}
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-hover-dropdown/2.2.1/bootstrap-hover-dropdown.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+{#    <script src="js/jquery.flexslider-min.js"></script>#}
+{#    <script src="js/easyResponsiveTabs.js"></script>#}
+{#    <script src="js/owl.carousel.js"></script>#}
+{#    <script src="js/custom.js"></script>#}
+
+
+     <script src="{{url_for('static', filename='js1/jquery.flexslider-min.js')}}" ></script>
+     <script src="{{url_for('static', filename='js1/jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='js1/easyResponsiveTabs.js')}}" ></script>
+
+     <script src="{{url_for('static', filename='js1/owl.carousel.js')}}" ></script>
+     <script src="{{url_for('static', filename='js1/custom.js')}}" ></script>
+
+</body>
+
+</html>

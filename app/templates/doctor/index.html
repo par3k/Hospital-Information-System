@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='static/assets/images/favicon.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/bootstrap/css/bootstrap.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/perfect-scrollbar/css/perfect-scrollbar.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/morrisjs/morris.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/c3-master/c3.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/style.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/pages/dashboard1.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/colors/default.css') }}"/>
+    <title>Hospital Information System</title>
+{#    <!-- Favicon icon -->#}
+{#    <link rel="icon" type="image/png" sizes="16x16" href="../../static/assets/images/favicon.png">#}
+
+{#    <!-- Bootstrap Core CSS -->#}
+{#    <link href="../../static/assets/node_modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">#}
+{#    <link href="../../static/assets/node_modules/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet">#}
+{#    <!-- This page CSS -->#}
+{#    <!-- chartist CSS -->#}
+{#    <link href="../../static/assets/node_modules/morrisjs/morris.css" rel="stylesheet">#}
+{#    <!--c3 CSS -->#}
+{#    <link href="../../static/assets/node_modules/c3-master/c3.min.css" rel="stylesheet">#}
+{#    <!-- Custom CSS -->#}
+{#    <link href="../../static/html/css/style.css" rel="stylesheet">#}
+{##}
+{#    <!-- Dashboard 1 Page CSS -->#}
+{#    <link href="../../static/html/css/pages/dashboard1.css" rel="stylesheet">#}
+{#    <!-- You can change the theme colors from here -->#}
+{#    <link href="../../static/html/css/colors/default.css" id="theme" rel="stylesheet">#}
+{#    #}
+
+    <!-- //css files -->
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body class="fix-header fix-sidebar card-no-border">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Hospital</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light">
+                <!-- ============================================================== -->
+                <!-- Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/home">
+                        <!-- Logo icon --><b>
+                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                            <!-- Dark Logo icon -->
+                            <img src="../../static/assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                            <!-- Light Logo icon -->
+                            <img src="../../static/assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text --><span>
+                         <!-- dark Logo text -->
+                         <img src="../../static/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                         <!-- Light Logo text -->
+                         <img src="../../static/assets/images/logo-light-text.png" class="light-logo" alt="homepage" /></span> </a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark" href="javascript:void(0)"><i class="fa fa-bars"></i></a> </li>
+                    </ul>
+                    <ul class="navbar-nav my-lg-0">
+                        <!-- ============================================================== -->
+                        <!-- Profile -->
+                        <!-- ============================================================== -->
+                        <div class="nav-item dropdown u-pro">
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href="{{ url_for('doctor.homepage') }}">{{ user.name }}</a>
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href="{{ url_for('auth.welcome') }}">Logout</a>
+
+                        </div>
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.homepage') }} aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Home</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.profile') }} aria-expanded="false"><i class="fa fa-user-circle-o"></i><span class="hide-menu">Profile</span></a>
+                        </li>
+                        {% if user.position == 'Leader' %}
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.schedule') }} aria-expanded="false"><i class="fa fa-calendar"></i><span class="hide-menu">Schedule</span></a>
+                        </li>
+                        {% endif %}
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.myschedule') }} aria-expanded="false"><i class="fa fa-calendar-o"></i><span class="hide-menu">My Schedule</span></a>
+                         </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.reservationcheck') }} aria-expanded="false"><i class="fa fa-smile-o"></i><span class="hide-menu">Reservation</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.inpatientlist') }} aria-expanded="false"><i class="fa fa-check-square"></i><span class="hide-menu">Inpatient Check</span></a>
+                        </li>
+                    </ul>
+ <!--                   <div class="text-center m-t-30">
+                        <a href="#" class="btn waves-effect waves-light btn-info hidden-md-down"> Upgrade to Pro</a>
+                    </div>-->
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-5 align-self-center">
+                        <h3 class="text-themecolor">Main Page</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">Main Page</li>
+                        </ol>
+                    </div>
+<!--                    <div class="col-md-7 align-self-center">
+                        <a href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down"> Upgrade to Pro</a>
+                    </div>-->
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Sales Chart and browser state-->
+                <!-- ============================================================== -->
+                <div class="row">        </div>
+                <!-- ============================================================== -->
+                <!-- End Sales Chart -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Projects of the Month -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex">
+                                    <div>
+                                        <h5 class="card-title">Today Reservation</h5>
+                                    </div>
+{#                                    <div class="ml-auto">#}
+{#                                        <select class="custom-select b-0">#}
+{#                                            <option selected="">Morning</option>#}
+{#                                            <option value="1">Afternoon</option>#}
+{#                                        </select>#}
+{#                                    </div>#}
+                                </div>
+                                <div class="table-responsive m-t-20 no-wrap">
+                                    <table class="table vm no-th-brd pro-of-month">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="2">Patient</th>
+                                                <th>Time</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                         {% for reservation in reservations %}
+                                            <tr>
+                                                <td style="width:50px;"><span class="round">P</span></td>
+                                                <td>{{ reservation.patient.name}}</td>
+                                              {% if reservation.reservationTime== '8' %}
+                                                 <td>8:00-9:00</td>
+                                              {% elif reservation.reservationTime== '9' %}
+                                                 <td>9:00-10:00</td>
+                                              {% elif reservation.reservationTime== '10' %}
+                                                 <td>10:00-11:00</td>
+                                              {% elif reservation.reservationTime== '11' %}
+                                                  <td>11:00-12:00</td>
+                                              {% elif reservation.reservationTime== '14' %}
+                                                  <td>14:00-15:00</td>
+                                              {% elif reservation.reservationTime== '15' %}
+                                                  <td>15:00-16:00</td>
+                                              {% elif reservation.reservationTime== '16' %}
+                                                  <td>16:00-17:00</td>
+                                              {% elif reservation.reservationTime== '17' %}
+                                                  <td>17:00-18:00</td>
+                                              {% endif %}
+                                            </tr>
+                                        {%endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column -->
+                    <!-- Column -->
+                    <div class="col-12" style="width:700px">
+                        <div class="card card-body mailbox">
+                            <h5 class="card-title">Notification</h5>
+                            <div class="message-center ps ps--theme_default ps--active-y" data-ps-id="a045fe3c-cb6e-028e-3a70-8d6ff0d7f6bd">
+                                <!-- Message -->
+                                {% for notice in notice %}
+                                <a href="#" style="text-align: center">
+                                    <div class="btn btn-danger btn-circle"><i class="fa fa-link" ></i></div>
+                                    <div class="mail-contnet" style="width: 20%">
+                                        <h5>{{notice.postTitle}}</h5>
+                                        <span class="mail-desc">{{notice.postContent}}</span>
+                                        <span class="time">{{notice.postDate}}</span>
+                                    </div>
+                                </a>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Projects of the Month -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Notification And Feeds -->
+                <!-- ============================================================== -->
+                <div class="row">
+
+                    <div class="col-lg-6">
+                        <div class="card">
+
+                        </div>
+                    </div>
+                    <!-- End Feeds -->
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Notification And Feeds -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- End Page Content -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+
+
+
+    <script src="{{url_for('static', filename='assets/node_modules/jquery/jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/popper.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/bootstrap.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/perfect-scrollbar.jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/waves.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/sidebarmenu.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/custom.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/raphael/raphael-min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/morrisjs/morris.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/d3/d3.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/c3-master/c3.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/dashboard1.js')}}" ></script>
+
+
+{#    <script src="../../static/assets/node_modules/jquery/jquery.min.js" ></script>#}
+{#    <!-- Bootstrap popper Core JavaScript -->#}
+{#    <script src="../../static/assets/node_modules/bootstrap/js/popper.min.js"></script>#}
+{#    <script src="../../static/assets/node_modules/bootstrap/js/bootstrap.min.js"></script>#}
+{#    <!-- slimscrollbar scrollbar JavaScript -->#}
+{#    <script src="../../static/html/js/perfect-scrollbar.jquery.min.js"></script>#}
+{#    <!--Wave Effects -->#}
+{#    <script src="../../static/html/js/waves.js"></script>#}
+{#    <!--Menu sidebar -->#}
+{#    <script src="../../static/html/js/sidebarmenu.js"></script>#}
+{#    <!--Custom JavaScript -->#}
+{#    <script src="../../static/html/js/custom.min.js"></script>#}
+{#    <!-- ============================================================== -->#}
+{#    <!-- This page plugins -->#}
+{#    <!-- ============================================================== -->#}
+{#    <!--morris JavaScript -->#}
+{#    <script src="../../static/assets/node_modules/raphael/raphael-min.js"></script>#}
+{#    <script src="../../static/assets/node_modules/morrisjs/morris.min.js"></script>#}
+{#    <!--c3 JavaScript -->#}
+{#    <script src="../../static/assets/node_modules/d3/d3.min.js"></script>#}
+{#    <script src="../../static/assets/node_modules/c3-master/c3.min.js"></script>#}
+{#    <!-- Chart JS -->#}
+{#    <script src="../../static/html/js/dashboard1.js"></script>#}
+
+</body>
+
+</html>

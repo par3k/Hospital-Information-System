@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='static/assets/images/favicon.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/bootstrap/css/bootstrap.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/perfect-scrollbar/css/perfect-scrollbar.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/morrisjs/morris.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/c3-master/c3.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/style.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/pages/dashboard1.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/colors/default.css') }}"/>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script>
+            function subForm() {
+                 var td = event.srcElement;
+                 var index=td.parentElement.rowIndex
+                 var i=index;
+                 var pid=document.getElementById("table1").rows[i].cells[0].innerHTML;
+                 console.log(pid)
+                 var data={
+                'pid':pid
+                };
+                $.ajax({
+                    url: "{{ url_for('patient.searchdoc') }}",
+                    type: 'post',
+                    contentType: 'application/json; charset=UTF-8',
+                    data: JSON.stringify(data),
+                    dataType : 'json',
+                    error:function (data) {
+                        console.log(data)
+                        alert('Can not load data');
+                    },
+                    success:function (data) {
+                        console.log(data)
+                        $("#pid").val(pid);
+                        $("#table2").html("");
+                        str="<thead>"+
+                                "<tr>"+
+                                    "<th>Time</th>"+
+                                    "<th>Available</th>"+
+                                "</tr>"+
+                            "</thead>"+
+                            "<tbody>"
+                        $("#table2").append(str);
+                        for (var prop in data) {
+                            console.log(data[prop]);
+                        }
+                        for(var i in data){
+                            str1 =
+                                "<tr>" +
+                                "<td>"+data[i]['mid']+ "</td>" +
+                                "<td>"+data[i]['name']+ "</td>" +
+                                "<td>"+data[i]['price']+ "</td>" +
+                                "<td>"+data[i]['quantity']+ "</td>" +
+                                "</tr>";
+                            $("#table2").append(str1);
+                        }
+                    }
+                });
+            }
+         </script>
+
+    {% if title %}
+        <title>HIS - {{ title }}</title>
+    {% else %}
+        <title>Hospital Information System</title>
+    {% endif %}
+</head>
+
+<body class="fix-header card-no-border fix-sidebar">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Admin Wrap</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light">
+                <!-- ============================================================== -->
+                <!-- Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href={{ url_for('patient.homepage') }}>
+                        <!-- Logo icon --><b>
+                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                            <!-- Dark Logo icon -->
+                            <img src="../../static/assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                            <!-- Light Logo icon -->
+                            <img src="../../static/assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text --><span>
+                         <!-- dark Logo text -->
+                         <img src="../../static/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                         <!-- Light Logo text -->
+                         <img src="../../static/assets/images/logo-light-text.png" class="light-logo" alt="homepage" /></span> </a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse">
+                    <!-- ============================================================== -->
+                    <!-- toggle and nav items -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav mr-auto"></ul>
+                    <!-- ============================================================== -->
+                    <!-- User profile and search -->
+                    <!-- ============================================================== -->
+                    <ul class="navbar-nav my-lg-0">
+                        <!-- ============================================================== -->
+                        <!-- Profile -->
+                        <!-- ============================================================== -->
+                        <div class="nav-item dropdown u-pro">
+                            {% if current_user.is_authenticated %}
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href={{ url_for('patient.patient_account') }}>{{ current_user.name }}</a>
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href={{ url_for('patient.patient_logout') }}>Logout</a>
+                            {% else %}
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href={{ url_for('patient.patient_register') }}>Register</a>
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href={{ url_for('patient.patient_login') }}>Login</a>
+                            {% endif %}
+                        </div>
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                         <li> <a class="waves-effect waves-dark" href="{{ url_for('patient.reservation') }}" aria-expanded="false"><i class="fa fa-table"></i><span class="hide-menu">Reservation</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href="{{ url_for('patient.myreservation') }}" aria-expanded="false"><i class="fa fa-user-circle-o"></i><span class="hide-menu">My Reservation</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href="{{ url_for('patient.reservationrecord') }}" aria-expanded="false"><i class="fa fa-list"></i><span class="hide-menu">Reservation Record</span></a>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li> <a class="waves-effect waves-dark" href="{{ url_for('patient.reservation') }}" aria-expanded="false"><i class="fa fa-table"></i><span class="hide-menu">Reservation</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href="{{ url_for('patient.myreservation') }}" aria-expanded="false"><i class="fa fa-user-circle-o"></i><span class="hide-menu">My Reservation</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href="{{ url_for('patient.reservationrecord') }}" aria-expanded="false"><i class="fa fa-list"></i><span class="hide-menu">Reservation Record</span></a>
+                        </li>
+                    </ul>
+<!--                    <div class="text-center m-t-30">
+                        <a href="#" class="btn waves-effect waves-light btn-info hidden-md-down"> Upgrade to Pro</a>
+                    </div>-->
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-5 align-self-center">
+                        <h3 class="text-themecolor">Accounts</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">Accounts</li>
+                        </ol>
+                    </div><!--
+                    <div class="col-md-7 align-self-center">
+                        <a href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down"> Upgrade to Pro</a>
+                    </div>-->
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- column -->
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                            <div>
+                                <form method="post">
+                                <div style="margin-bottom: 10px; text-align: center">
+                                    <label class="control-label col-xs-4" style="margin-right: 10px">
+                                        Department:
+                                    </label>
+                                    <select name="search_department" class="custom-select b-0">
+                                        <option value="All">All</option>
+                                        <option value="Ophthalmology">Ophthalmology</option>
+                                        <option value="Dermatology">Dermatology</option>
+                                        <option value="Internal medicine">Internal medicine</option>
+                                        <option value="Dentistry">Dentistry</option>
+                                        <option value="Surgery">Surgery</option>
+                                        <option value="HR">HR</option>
+                                        <option value="Warehouse">Warehouse</option>
+                                    </select>
+                                    </div>
+                                <div style="margin-bottom: 10px; text-align: center">
+                                    <label class="control-label col-xs-4" style="margin-right: 10px; margin-left: 10px">
+                                        Status:
+                                    </label>
+                                    <select name="search_status" class="custom-select b-0">
+                                        <option value="All">All</option>
+                                        <option value="Passive">Passive</option>
+                                        <option value="Active">Active</option>
+                                    </select>
+                                        </div>
+                                <div style="margin-bottom: 10px; text-align: center">
+                                    <button href="#" type="submit" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down"> Search</button>
+                                </div>
+                                </form>
+                            </div>
+                                <div class="table-responsive">
+                                    <table class="table" id="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Staff ID</th>
+                                                <th>Name</th>
+                                                <th>Gender</th>
+                                                <th>Department</th>
+                                                <th>Phone Number</th>
+                                                <th>Position</th>
+                                                <th>Status</th>
+                                                <th style="text-align: center; width:25%">Option</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for staff in staffInfo %}
+                                            <tr>
+                                                <td>{{loop.index}}</td>
+                                                <td>{{ staff.StaffID}}</td>
+                                                <td>{{ staff.name}}</td>
+                                                <td>{{ staff.gender}}</td>
+
+                                                {%  if staff.department == None %}
+                                                    <td>None</td>
+                                                {% else %}
+                                                    <td>{{staff.department.departmentName}}</td>
+                                                {% endif%}
+
+                                                <td>{{ staff.phoneNumber}}</td>
+                                                <td>{{ staff.position}}</td>
+                                                <td>{{ staff.status}}</td>
+                                                <td >
+{#                                                    <a href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down"#}
+{#                                                       style="background-color: #fb3a3a;border-color: #fb3a3a;margin-left: 10px">#}
+{#                                                        Delete#}
+{#                                                    </a>#}
+                                                    <div style=" text-align: center ">
+                                                    <a href="#"  name="staffModify" class="btn waves-effect waves-light btn btn-info hidden-sm-down"
+                                                       style="background-color: #1aac26;border-color: #1aac26" onclick="getrow({{ loop.index }})" >
+                                                        Modify
+                                                    </a>
+                                                    </div>
+{#                                                    <a href="javascript:void(0);" οnclick="js_method()">This is test</a>#}
+                                                </td>
+                                            </tr>
+                                        {%endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="staffAdd" class="modal">
+                        <div class="modal-dialog animated">
+                            <div class="modal-content">
+                                <form action="{{ url_for('hr.account') }}" id="11" class="form-horizontal" method="post">
+                                    <input type="hidden" name="formtype" value="add">
+                                    <div class="modal-header">
+                                        <strong>Add Account</strong>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div>
+                                                <label for="add-name" class="control-label col-xs-4" style="width:20%">
+                                                    Name:
+                                                </label>
+                                                <input type="text" name="add_name" id="add-name" class="form-control" style="width: 40%"/>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Gender:
+                                                </label>
+                                                <select class="custom-select b-0" name="add_gender" style="width: 40%">
+{#                                                    <option selected="">Male</option>#}
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                </select>
+                                           </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Type:
+                                                </label>
+                                                <select class="custom-select b-0" name="add_type" style="width: 40%">
+                                                    <option value="Doctor">Doctor</option>
+                                                    <option value="Nurse">Nurse</option>
+                                                    <option value="WarehouseAdminitor">WarehouseAdminitor</option>
+                                                    <option value="HR">HR</option>
+                                                </select>
+                                            </div>
+
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Department:
+                                                </label>
+                                                <select class="custom-select b-0" name="add_department" style="width: 40%">
+{#                                                    <option selected="">Ophthalmology</option>#}
+                                                    <option value="Ophthalmology">Ophthalmology</option>
+                                                    <option value="Dermatology">Dermatology</option>
+                                                    <option value="Internal medicine">Internal medicine</option>
+                                                    <option value="Dentistry">Dentistry</option>
+                                                    <option value="Surgery">Surgery</option>
+                                                    <option value="HR">HR</option>
+                                                    <option value="Warehouse">Warehouse</option>>
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Phone:
+                                                </label>
+                                                <input type="tel" name="add_phone" id="add-phone" class="form-control" style="width: 40%"/>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Position:
+                                                </label>
+                                                <select class="custom-select b-0" name="add_position" style="width: 40%">
+                                                    <option value="Leader">Leader</option>
+                                                    <option value="Professor">Professor</option>
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Status:
+                                                </label>
+                                                <select class="custom-select b-0" name="add_status"style="width: 40%">
+                                                    <option value="Active">Active</option>
+                                                    <option value="Passive">Passive</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" type="button" onclick="staffAdd.close();">Cancel</button>
+                                        <button class="btn btn-primary" style="background-color: #20aee3; border-color: #20aee3" type="submit" onclick="staffAdd.close();">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="staffModify" class="modal">
+                        <div class="modal-dialog animated">
+                            <div class="modal-content">
+                                <form action="{{ url_for('hr.account') }}" id="12" class="form-horizontal" method="post">
+                                    <input type="hidden" name="formtype" value="modify">
+                                    <div class="modal-header">
+                                        <strong>Modify</strong>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <input type="hidden" name="modify_id"  id="modify_id" value="">
+
+                                            <div>
+                                                <label for="add-name" class="control-label col-xs-4" style="width:20%">
+                                                    Name:
+                                                </label>
+                                                <input type="text" id="modify_name" name="modify_name"  class="form-control" style="width: 40%"/>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Gender:
+                                                </label>
+                                                <select  id="modify_gender" class="custom-select b-0" name="modify_gender" style="width: 40%">
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                </select>
+                                           </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Department:
+                                                </label>
+                                                <select  id="modify_department" class="custom-select b-0" name="modify_department" style="width: 40%">
+                                                    <option value="Ophthalmology">Ophthalmology</option>
+                                                    <option value="Dermatology">Dermatology</option>
+                                                    <option value="Internal medicine">Internal medicine</option>
+                                                    <option value="Dentistry">Dentistry</option>
+                                                    <option value="Surgery">Surgery</option>
+                                                    <option value="HR">HR</option>
+                                                    <option value="Warehouse">Warehouse</option>
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Phone:
+                                                </label>
+                                                <input  id="modify_phone" type="tel" name="modify_phone"  class="form-control" style="width: 40%"/>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Position:
+                                                </label>
+                                                <select id="modify_position" class="custom-select b-0" name="modify_position" style="width: 40%">
+                                                    <option value="Leader">Leader</option>
+                                                    <option value="Professor">Professor</option>
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Status:
+                                                </label>
+                                                <select  id="modify_status" class="custom-select b-0" name="modify_status"style="width: 40%">
+                                                    <option value="Active">Active</option>
+                                                    <option value="Passive">Passive</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" type="button" onclick="staffModify.close();">Cancel</button>
+                                        <button class="btn btn-primary" style="background-color: #20aee3; border-color: #20aee3" type="submit" onclick="staffModify.close();">Modify</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- End Wrapper -->
+        <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+         <script>
+            function subForm() {
+                 var td = event.srcElement;
+                 var index=td.parentElement.rowIndex
+                 var i=index;
+                 var doctorid=document.getElementById("table1").rows[i].cells[0].innerHTML;
+                 console.log(doctorid)
+                 var data={
+                'doctorid':doctorid
+                };
+                $.ajax({
+                    url: "{{ url_for('patient.searchreservation') }}",
+                    type: 'post',
+                    contentType: 'application/json; charset=UTF-8',
+                    data: JSON.stringify(data),
+                    dataType : 'json',
+                    error:function (data) {
+                        console.log(data)
+                        alert('Can not load data');
+                    },
+                    success:function (data) {
+                        console.log(data)
+                        {#$("#pid").val(pid);#}
+                        {#$("#table2").html("");#}
+                        {#str="<thead>"+#}
+                        {#        "<tr>"+#}
+                        {#            "<th>Time</th>"+#}
+                        {#            "<th>Available</th>"+#}
+                        {#        "</tr>"+#}
+                        {#    "</thead>"+#}
+                        {#    "<tbody>"#}
+                        {#$("#table2").append(str);#}
+                        {#for (var prop in data) {#}
+                        {#    console.log(data[prop]);#}
+                        {# }#}
+                        {#for(var i in data){#}
+                        {#    str1 =#}
+                        {#        "<tr>" +#}
+                        {#        "<td>"+data[i]['mid']+ "</td>" +#}
+                        {#        "<td>"+data[i]['name']+ "</td>" +#}
+                        {#        "<td>"+data[i]['price']+ "</td>" +#}
+                        {#        "<td>"+data[i]['quantity']+ "</td>" +#}
+                        {#        "</tr>";#}
+                        {#    $("#table2").append(str1);#}
+                        {# }#}
+                    }
+                });
+            }
+         </script>
+    <script src="{{url_for('static', filename='assets/node_modules/jquery/jquery.min.js')}}" ></script>
+    <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/popper.min.js')}}" ></script>
+    <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/bootstrap.min.js')}}" ></script>
+    <script src="{{url_for('static', filename='html/js/perfect-scrollbar.jquery.min.js')}}" ></script>
+    <script src="{{url_for('static', filename='html/js/waves.js')}}" ></script>
+    <script src="{{url_for('static', filename='html/js/sidebarmenu.js')}}" ></script>
+    <script src="{{url_for('static', filename='html/js/custom.min.js')}}" ></script>
+    <script src="{{url_for('static', filename='assets/node_modules/raphael/raphael-min.js')}}" ></script>
+    <script src="{{url_for('static', filename='assets/node_modules/morrisjs/morris.min.js')}}" ></script>
+    <script src="{{url_for('static', filename='assets/node_modules/d3/d3.min.js')}}" ></script>
+    <script src="{{url_for('static', filename='assets/node_modules/c3-master/c3.min.js')}}" ></script>
+    <script src="{{url_for('static', filename='html/js/dashboard1.js')}}" ></script>
+</body>
+
+</html>

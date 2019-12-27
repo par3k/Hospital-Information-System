@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Hospital Information System</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='static/assets/images/favicon.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/bootstrap/css/bootstrap.min.css') }}"/>
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/style.css') }}"/>
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/rmodal-no-bootstrap.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/colors/default.css') }}"/>
+
+     <script src="{{url_for('static', filename='html/js/rmodal.js')}}" ></script>
+
+
+{#    <link rel="icon" type="image/png" sizes="16x16" href="../../static/assets/images/favicon.png">#}
+{##}
+{#    <!-- Bootstrap Core CSS -->#}
+{#    <link href="../../static/assets/node_modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">#}
+{#    <!-- Custom CSS -->#}
+{#    <link href="../../static/html/css/style.css" rel="stylesheet">#}
+{#    <!-- You can change the theme colors from here -->#}
+{#    <link href="../../static/html/css/colors/default.css" id="theme" rel="stylesheet">#}
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+
+{#    <link rel="stylesheet" href="../../static/html/css/rmodal-no-bootstrap.css" type="text/css" />#}
+{#    <script type="text/javascript" src="../../static/html/js/rmodal.js"></script>#}
+    <script type="text/javascript">
+        window.onload = function() {
+            var staffAdd = new RModal(document.getElementById('staffAdd'), {
+                beforeOpen: function(next) {
+                    console.log('beforeOpen');
+                    next();
+                }
+                , afterOpen: function() {
+                    console.log('opened');
+                }
+                , beforeClose: function(next) {
+                    console.log('beforeClose');
+                    next();
+                }
+                , afterClose: function() {
+                    console.log('closed');
+                }
+            });
+            var staffModify = new RModal(document.getElementById('staffModify'), {
+                beforeOpen: function(next) {
+                    console.log('beforeOpen');
+                    next();
+                }
+                , afterOpen: function() {
+                    console.log('opened');
+                }
+
+                , beforeClose: function(next) {
+                    console.log('beforeClose');
+                    next();
+                }
+                , afterClose: function() {
+                    console.log('closed');
+                }
+            });
+
+            document.addEventListener('keydown', function(ev) {
+                staffAdd.keydown(ev);
+                staffModify.keydown(ev);
+                //prescribe.keydown(ev);
+            }, false);
+
+            var event =[];
+            event= document.getElementsByName('staffModify');
+            for(var i=0;i<event.length;i++){
+                event[i].addEventListener("click", function(ev) {
+                    ev.preventDefault();
+                    staffModify.open();
+                }, false);
+            }
+
+            document.getElementById('showStaffAdd').addEventListener("click", function(ev) {
+                ev.preventDefault();
+                staffAdd.open();
+            }, false);
+
+
+            window.staffModify = staffModify;
+            window.staffAdd = staffAdd;
+        }
+    </script>
+</head>
+
+<body class="fix-header card-no-border fix-sidebar">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Hospital</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light">
+                <!-- ============================================================== -->
+                <!-- Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/home">
+                        <!-- Logo icon --><b>
+                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                            <!-- Dark Logo icon -->
+                            <img src="../../static/assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                            <!-- Light Logo icon -->
+                            <img src="../../static/assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text --><span>
+                         <!-- dark Logo text -->
+                         <img src="../../static/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                         <!-- Light Logo text -->
+                         <img src="../../static/assets/images/logo-light-text.png" class="light-logo" alt="homepage" /></span> </a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark" href="javascript:void(0)"><i class="fa fa-bars"></i></a> </li>
+                    </ul>
+                    <ul class="navbar-nav my-lg-0">
+                        <!-- ============================================================== -->
+                        <!-- Profile -->
+                        <!-- ============================================================== -->
+                        <div class="nav-item dropdown u-pro">
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href="{{ url_for('patient.homepage') }}">{{ user.name }}</a>
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href="{{ url_for('auth.welcome') }}">Logout</a>
+
+                        </div>
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li> <a class="waves-effect waves-dark" href="{{ url_for('patient.reservation') }}" aria-expanded="false"><i class="fa fa-table"></i><span class="hide-menu">Reservation</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href="{{ url_for('patient.myreservation') }}" aria-expanded="false"><i class="fa fa-user-circle-o"></i><span class="hide-menu">My Reservation</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href="{{ url_for('patient.reservationrecord') }}" aria-expanded="false"><i class="fa fa-list"></i><span class="hide-menu">Reservation Record</span></a>
+                        </li>
+                    </ul>
+<!--                    <div class="text-center m-t-30">
+                        <a href="#" class="btn waves-effect waves-light btn-info hidden-md-down"> Upgrade to Pro</a>
+                    </div>-->
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-5 align-self-center">
+                        <h3 class="text-themecolor">Accounts</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">Accounts</li>
+                        </ol>
+                    </div><!--
+                    <div class="col-md-7 align-self-center">
+                        <a href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down"> Upgrade to Pro</a>
+                    </div>-->
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- column -->
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Accounts Management</h4>
+<!--                                <h6 class="card-subtitle">Add class <code>.table</code></h6-->
+                                <form method="post">
+                                 <input type="hidden" name="formtype" value="search">
+                                <div style="margin-bottom: 10px; text-align: center">
+                                    <label class="control-label col-xs-4" style="margin-right: 10px">
+                                        Name:
+                                    </label>
+                                    <input type="text" name="search_name" value="" class="form-control" style="width: 20%"/>
+
+                                    <label class="control-label col-xs-4" style="margin-right: 10px">
+                                        Department:
+                                    </label>
+                                    <select name="search_department" class="custom-select b-0">
+                                        <option value="All">All</option>
+                                        <option value="Ophthalmology">Ophthalmology</option>
+                                        <option value="Dermatology">Dermatology</option>
+                                        <option value="Internal medicine">Internal medicine</option>
+                                        <option value="Dentistry">Dentistry</option>
+                                        <option value="Surgery">Surgery</option>
+                                        <option value="HR">HR</option>
+                                        <option value="Warehouse">Warehouse</option>
+                                    </select>
+
+                                    <label class="control-label col-xs-4" style="margin-right: 10px; margin-left: 10px">
+                                        Status:
+                                    </label>
+                                    <select name="search_status" class="custom-select b-0">
+                                        <option value="All">All</option>
+                                        <option value="Passive">Passive</option>
+                                        <option value="Active">Active</option>
+                                    </select>
+                                    <button href="#" type="submit" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down"> Search</button>
+                                </div>
+                            </form>
+                                <div style="float: left;margin-bottom: 10px">
+                                    <a id="showStaffAdd" href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down">
+                                        Add
+                                    </a>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table" id="table">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Staff ID</th>
+                                                <th>Name</th>
+                                                <th>Gender</th>
+                                                <th>Department</th>
+                                                <th>Phone Number</th>
+                                                <th>Position</th>
+                                                <th>Status</th>
+                                                <th style="text-align: center; width:25%">Option</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for staff in staffInfo %}
+                                            <tr>
+                                                <td>{{loop.index}}</td>
+                                                <td>{{ staff.StaffID}}</td>
+                                                <td>{{ staff.name}}</td>
+                                                <td>{{ staff.gender}}</td>
+
+                                                {%  if staff.department == None %}
+                                                    <td>None</td>
+                                                {% else %}
+                                                    <td>{{staff.department.departmentName}}</td>
+                                                {% endif%}
+
+                                                <td>{{ staff.phoneNumber}}</td>
+                                                <td>{{ staff.position}}</td>
+                                                <td>{{ staff.status}}</td>
+                                                <td >
+{#                                                    <a href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down"#}
+{#                                                       style="background-color: #fb3a3a;border-color: #fb3a3a;margin-left: 10px">#}
+{#                                                        Delete#}
+{#                                                    </a>#}
+                                                    <div style=" text-align: center ">
+                                                    <a href="#"  name="staffModify" class="btn waves-effect waves-light btn btn-info hidden-sm-down"
+                                                       style="background-color: #1aac26;border-color: #1aac26" onclick="getrow({{ loop.index }})" >
+                                                        Modify
+                                                    </a>
+                                                    </div>
+{#                                                    <a href="javascript:void(0);" οnclick="js_method()">This is test</a>#}
+                                                </td>
+                                            </tr>
+                                        {%endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="staffAdd" class="modal">
+                        <div class="modal-dialog animated">
+                            <div class="modal-content">
+                                <form action="{{ url_for('hr.account') }}" id="11" class="form-horizontal" method="post">
+                                    <input type="hidden" name="formtype" value="add">
+                                    <div class="modal-header">
+                                        <strong>Add Account</strong>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div>
+                                                <label for="add-name" class="control-label col-xs-4" style="width:20%">
+                                                    Name:
+                                                </label>
+                                                <input type="text" name="add_name" id="add-name" class="form-control" style="width: 40%"/>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Gender:
+                                                </label>
+                                                <select class="custom-select b-0" name="add_gender" style="width: 40%">
+{#                                                    <option selected="">Male</option>#}
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                </select>
+                                           </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Type:
+                                                </label>
+                                                <select class="custom-select b-0" name="add_type" style="width: 40%">
+                                                    <option value="Doctor">Doctor</option>
+                                                    <option value="Nurse">Nurse</option>
+                                                    <option value="WarehouseAdminitor">WarehouseAdminitor</option>
+                                                    <option value="HR">HR</option>
+                                                </select>
+                                            </div>
+
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Department:
+                                                </label>
+                                                <select class="custom-select b-0" name="add_department" style="width: 40%">
+{#                                                    <option selected="">Ophthalmology</option>#}
+                                                    <option value="Ophthalmology">Ophthalmology</option>
+                                                    <option value="Dermatology">Dermatology</option>
+                                                    <option value="Internal medicine">Internal medicine</option>
+                                                    <option value="Dentistry">Dentistry</option>
+                                                    <option value="Surgery">Surgery</option>
+                                                    <option value="HR">HR</option>
+                                                    <option value="Warehouse">Warehouse</option>>
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Phone:
+                                                </label>
+                                                <input type="tel" name="add_phone" id="add-phone" class="form-control" style="width: 40%"/>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Position:
+                                                </label>
+                                                <select class="custom-select b-0" name="add_position" style="width: 40%">
+                                                    <option value="Leader">Leader</option>
+                                                    <option value="Professor">Professor</option>
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Status:
+                                                </label>
+                                                <select class="custom-select b-0" name="add_status"style="width: 40%">
+                                                    <option value="Active">Active</option>
+                                                    <option value="Passive">Passive</option>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" type="button" onclick="staffAdd.close();">Cancel</button>
+                                        <button class="btn btn-primary" style="background-color: #20aee3; border-color: #20aee3" type="submit" onclick="staffAdd.close();">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="staffModify" class="modal">
+                        <div class="modal-dialog animated">
+                            <div class="modal-content">
+                                <form action="{{ url_for('hr.account') }}" id="12" class="form-horizontal" method="post">
+                                    <input type="hidden" name="formtype" value="modify">
+                                    <div class="modal-header">
+                                        <strong>Modify</strong>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <input type="hidden" name="modify_id"  id="modify_id" value="">
+
+                                            <div>
+                                                <label for="add-name" class="control-label col-xs-4" style="width:20%">
+                                                    Name:
+                                                </label>
+                                                <input type="text" id="modify_name" name="modify_name"  class="form-control" style="width: 40%"/>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Gender:
+                                                </label>
+                                                <select  id="modify_gender" class="custom-select b-0" name="modify_gender" style="width: 40%">
+                                                    <option value="Male">Male</option>
+                                                    <option value="Female">Female</option>
+                                                </select>
+                                           </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Department:
+                                                </label>
+                                                <select  id="modify_department" class="custom-select b-0" name="modify_department" style="width: 40%">
+                                                    <option value="Ophthalmology">Ophthalmology</option>
+                                                    <option value="Dermatology">Dermatology</option>
+                                                    <option value="Internal medicine">Internal medicine</option>
+                                                    <option value="Dentistry">Dentistry</option>
+                                                    <option value="Surgery">Surgery</option>
+                                                    <option value="HR">HR</option>
+                                                    <option value="Warehouse">Warehouse</option>
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Phone:
+                                                </label>
+                                                <input  id="modify_phone" type="tel" name="modify_phone"  class="form-control" style="width: 40%"/>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Position:
+                                                </label>
+                                                <select id="modify_position" class="custom-select b-0" name="modify_position" style="width: 40%">
+                                                    <option value="Leader">Leader</option>
+                                                    <option value="Professor">Professor</option>
+                                                </select>
+                                            </div>
+
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Status:
+                                                </label>
+                                                <select  id="modify_status" class="custom-select b-0" name="modify_status"style="width: 40%">
+                                                    <option value="Active">Active</option>
+                                                    <option value="Passive">Passive</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" type="button" onclick="staffModify.close();">Cancel</button>
+                                        <button class="btn btn-primary" style="background-color: #20aee3; border-color: #20aee3" type="submit" onclick="staffModify.close();">Modify</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script type="text/javascript">
+        function getrow(index) {
+            var i=index;
+            var title1=document.getElementById("table").rows[i].cells[0].innerHTML;
+            var id=document.getElementById("table").rows[i].cells[1].innerHTML;
+            var name=document.getElementById("table").rows[i].cells[2].innerHTML;
+            var gender=document.getElementById("table").rows[i].cells[3].innerHTML;
+            var department=document.getElementById("table").rows[i].cells[4].innerHTML;
+            var phone=document.getElementById("table").rows[i].cells[5].innerHTML;
+            var position=document.getElementById("table").rows[i].cells[6].innerHTML;
+            var status=document.getElementById("table").rows[i].cells[7].innerHTML;
+
+            document.getElementById("modify_id").value=id
+            document.getElementById("modify_name").value=name
+            document.getElementById("modify_gender").value=gender
+            document.getElementById("modify_phone").value=phone
+            document.getElementById("modify_position").value=position
+            document.getElementById("modify_status").value=status
+            document.getElementById("modify_department").value=department
+            {#console.log(title1);#}
+            {# console.log(title2);#}
+            {#  console.log(title3);#}
+            {#  console.log(title4);#}
+            {#  console.log(title5);#}
+            {#  console.log(title6);#}
+            {#  console.log(title7);#}
+            {#  console.log(title8);#}
+
+
+               {#console.log(title3);#}
+            {#$("#staffModify").modal("show");#}
+            {#console.log(index);#}
+            console.log('index');
+        }
+
+    </script>
+     <script src="{{url_for('static', filename='assets/node_modules/jquery/jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/popper.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/bootstrap.min.js')}}" ></script>
+
+     <script src="{{url_for('static', filename='html/js/perfect-scrollbar.jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/waves.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/sidebarmenu.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/custom.min.js')}}" ></script>
+
+     <script src="{{url_for('static', filename='assets/node_modules/peity/jquery.peity.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/peity/jquery.peity.init.js')}}" ></script>
+{#    <script src="../../static/assets/node_modules/jquery/jquery.min.js"></script>#}
+{#    <!-- Bootstrap tether Core JavaScript -->#}
+{#    <script src="../../static/assets/node_modules/bootstrap/js/popper.min.js"></script>#}
+{#    <script src="../../static/assets/node_modules/bootstrap/js/bootstrap.min.js"></script>#}
+{#    <!-- slimscrollbar scrollbar JavaScript -->#}
+{#    <script src="../../static/html/js/perfect-scrollbar.jquery.min.js"></script>#}
+{#    <!--Wave Effects -->#}
+{#    <script src="../../static/html/js/waves.js"></script>#}
+{#    <!--Menu sidebar -->#}
+{#    <script src="../../static/html/js/sidebarmenu.js"></script>#}
+{#    <!--Custom JavaScript -->#}
+{#    <script src="../../static/html/js/custom.min.js"></script>#}
+{#    <!-- jQuery peity -->#}
+{#    <script src="../../static/assets/node_modules/peity/jquery.peity.min.js"></script>#}
+{#    <script src="../../static/assets/node_modules/peity/jquery.peity.init.js"></script>#}
+</body>
+
+</html>

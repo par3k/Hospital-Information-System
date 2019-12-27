@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='static/assets/images/favicon.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/bootstrap/css/bootstrap.min.css') }}"/>
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/style.css') }}"/>
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/rmodal-no-bootstrap.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/colors/default.css') }}"/>
+     <script src="{{url_for('static', filename='html/js/rmodal.js')}}" ></script>
+    <title>Hospital Information System</title>
+{#    <link rel="icon" type="image/png" sizes="16x16" href="../../static/assets/images/favicon.png">#}
+{#    <title>AdminWrap - Easy to Customize Bootstrap 4 Admin Template</title>#}
+{#    <!-- Bootstrap Core CSS -->#}
+{#    <link href="../../static/assets/node_modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">#}
+{#    <!-- Custom CSS -->#}
+{#    <link href="css/style.css" rel="stylesheet">#}
+{#    <!-- You can change the theme colors from here -->#}
+{#    <link href="css/colors/default.css" id="theme" rel="stylesheet">#}
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+</head>
+
+<body class="fix-header card-no-border fix-sidebar">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Admin Wrap</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light">
+                <!-- ============================================================== -->
+                <!-- Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/home">
+                        <!-- Logo icon --><b>
+                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                            <!-- Dark Logo icon -->
+                            <img src="../../static/assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                            <!-- Light Logo icon -->
+                            <img src="../../static/assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text --><span>
+                         <!-- dark Logo text -->
+                         <img src="../../static/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                         <!-- Light Logo text -->
+                         <img src="../../static/assets/images/logo-light-text.png" class="light-logo" alt="homepage" /></span> </a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark" href="javascript:void(0)"><i class="fa fa-bars"></i></a> </li>
+                    </ul>
+                    <ul class="navbar-nav my-lg-0">
+                        <!-- ============================================================== -->
+                        <!-- Profile -->
+                        <!-- ============================================================== -->
+                        <div class="nav-item dropdown u-pro">
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href="{{ url_for('warehouse.homepage') }}"></a>
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href="{{ url_for('auth.welcome') }}">Logout</a>
+
+                        </div>
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('warehouse.homepage') }} aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Main</span></a>
+                        </li>
+                         <li> <a class="waves-effect waves-dark" href={{ url_for('warehouse.medicine') }} aria-expanded="false"><i class="fa fa-table"></i><span class="hide-menu">MedicineInfo</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('warehouse.prescription') }} aria-expanded="false"><i class="fa fa-user-circle-o"></i><span class="hide-menu">PrescriptionDetail</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('warehouse.profile') }} aria-expanded="false"><i class="fa fa-bookmark-o"></i><span class="hide-menu">Profile</span></a>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-5 align-self-center">
+                        <h3 class="text-themecolor">PrescriptionDetail</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">PrescriptionDetail</li>
+                        </ol>
+                    </div>
+<!--                    <div class="col-md-7 align-self-center">-->
+<!--                        <a href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down"> Upgrade to Pro</a>-->
+<!--                    </div>-->
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <!-- Row -->
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-lg-4 col-xlg-3 col-md-5" style="background-color: #ffffff ">
+
+                        <table id="table1" onclick="subForm()" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>PrescriptionID</th>
+                                                <th>PaymentCondition</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {%for prescription1 in prescription %}
+                                            <tr>
+                                                <td>{{ prescription1.prescriptionID}} </td>
+                                                {% if prescription1.paymentStatues=='y' %}
+                                                    <td>YES</td>
+                                                {% else %}
+                                                    <td>NO</td>
+                                                {% endif %}
+                                            </tr>
+                                        </tbody>
+                                        {%endfor%}
+                                    </table>
+
+
+                    </div>
+                    <!-- Column -->
+                    <!-- Column -->
+                    <div class="col-lg-8 col-xlg-9 col-md-7">
+                        <div class="card">
+                            <!-- Tab panes -->
+                            <div class="card-body">
+                                <table id="table2" class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>MedicineID</th>
+                                                <th>MedicineName</th>
+                                                <th>Price</th>
+                                                <th>Quantity</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody">
+                                        </tbody>
+                                </table>
+                                <form id="form1" action="{{ url_for('warehouse.givemedicine') }}" , method="post" >
+
+                                </form>
+
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- Column -->
+                </div>
+                <!-- Row -->
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+             <footer class="footer"> Warehouse Admin  </footer>
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+      <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+     <script type="text/javascript">
+        function getrow() {
+            var td = event.srcElement; // 通过event.srcElement 获取激活事件的对象 td
+            var index=td.parentElement.rowIndex
+
+            var i=index;
+            var p_id=document.getElementById("table1").rows[i].cells[0].innerHTML;
+
+        }
+        function doclick() {
+        var td = event.srcElement; // 通过event.srcElement 获取激活事件的对象 td
+        index=td.parentElement.rowIndex
+        alert("行号：" + (td.parentElement.rowIndex) + "，内容：" + td.innerText);
+
+
+    }
+    </script>
+    <script>
+//别忘了导入该用的js文件
+
+function subForm() {
+     var td = event.srcElement; // 通过event.srcElement 获取激活事件的对象 td
+     var index=td.parentElement.rowIndex
+     var i=index;
+     var pid=document.getElementById("table1").rows[i].cells[0].innerHTML;
+     var pay=document.getElementById("table1").rows[i].cells[1].innerHTML;
+
+
+     var data={
+    'pid':pid
+    };
+    $.ajax({
+        url: "{{ url_for('warehouse.searchpre') }}", //请求的url
+        type: 'post', //请求的方式
+        contentType: 'application/json; charset=UTF-8',
+        //data: $('#search').serialize(), //form表单里要提交的内容，里面的input等写上name就会提交，这是序列化
+        data: JSON.stringify(data),
+        //dataType : 'json',
+        error:function (data) {
+            alert('查询失败');
+        },
+        success:function (data) {
+{#             {% for medicine in medicineInfo %}#}// 模板是能用的···
+{#                 console.log({{ loop.index }})#}
+{#             {%endfor%}#}
+            //清空table中的html
+            $("#pid").val(pid);
+            $("#table2").html("");
+            str="<thead>"+
+                    "<tr>"+
+                        "<th>MedicineID</th>"+
+                        "<th>MedicineName</th>"+
+                        "<th>Price</th>"+
+                        "<th>Quantity</th>"+
+                    "</tr>"+
+                "</thead>"+
+                "<tbody>"
+            $("#table2").append(str);
+            for (var prop in data) {
+                console.log(data[prop]['quantity']);
+            }
+            {#for(var i = 0;i<data.data.length;i++){#}
+            for(var i in data){
+                str1 =
+                    "<tr>" +
+                    "<td>"+data[i]['mid']+ "</td>" +
+                    "<td>"+data[i]['name']+ "</td>" +
+                    "<td>"+data[i]['price']+ "</td>" +
+                    "<td>"+data[i]['quantity']+ "</td>" +
+                    "</tr>";
+                $("#table2").append(str1);
+            }
+
+
+            $("#table2").append("</tbody>");
+            console.log(pay)
+
+            if(pay=='YES'){
+                $("#form1").html("");
+                 str2="<input type=\"hidden\" name=\"pid\" id=\"pid\" value=\"1111\">"+
+                     "                                     <div class=\"col-sm-12\" style=\"float: right\">\n" +
+                "                                        <button type=\"submit\" class=\"btn btn-success\" style=\"float: right\"> Give Medicine</button>\n" +
+                "                                    </div>";
+            $("#form1").append(str2);
+            $("#pid").val(pid);
+            }
+            else {
+                $("#form1").html("");
+            }
+        }
+    });
+
+
+
+}
+
+</script>
+         <script src="{{url_for('static', filename='assets/node_modules/jquery/jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/popper.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/bootstrap.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/perfect-scrollbar.jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/waves.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/sidebarmenu.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/custom.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/peity/jquery.peity.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/peity/jquery.peity.init.js')}}" ></script>
+
+{#    <script src="../../static/assets/node_modules/jquery/jquery.min.js"></script>#}
+{#    <!-- Bootstrap tether Core JavaScript -->#}
+{#    <script src="../../static/assets/node_modules/bootstrap/js/popper.min.js"></script>#}
+{#    <script src="../../static/assets/node_modules/bootstrap/js/bootstrap.min.js"></script>#}
+{#    <!-- slimscrollbar scrollbar JavaScript -->#}
+{#    <script src="js/perfect-scrollbar.jquery.min.js"></script>#}
+{#    <!--Wave Effects -->#}
+{#    <script src="js/waves.js"></script>#}
+{#    <!--Menu sidebar -->#}
+{#    <script src="js/sidebarmenu.js"></script>#}
+{#    <!--Custom JavaScript -->#}
+{#    <script src="js/custom.min.js"></script>#}
+</body>
+
+</html>

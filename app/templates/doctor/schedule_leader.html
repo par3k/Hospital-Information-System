@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='static/assets/images/favicon.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/bootstrap/css/bootstrap.min.css') }}"/>
+    <title>Hospital Information System</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/style.css') }}"/>
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/rmodal-no-bootstrap.css') }}"/>
+<title>Hospital Information System</title>
+      <script src="{{url_for('static', filename='html/js/rmodal.js')}}" ></script>
+{#    #}
+{#    <link rel="icon" type="image/png" sizes="16x16" href="../../static/assets/images/favicon.png">#}
+{#    #}
+{#    <!-- Bootstrap Core CSS -->#}
+{#    <link href="../../static/assets/node_modules/bootstrap/css/bootstrap.min.css" rel="stylesheet">#}
+{#    <!-- Custom CSS -->#}
+{#    <link href="../../static/html/css/style.css" rel="stylesheet">#}
+{#    <!-- You can change the theme colors from here -->#}
+{#    <link href="../../static/html/css/colors/default.css" id="theme" rel="stylesheet">#}
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+    <link rel="stylesheet" href="../../static/html/css/rmodal-no-bootstrap.css" type="text/css" />
+    <script type="text/javascript" src="../../static/html/js/rmodal.js"></script>
+    <script type="text/javascript">
+        window.onload = function() {
+            var schedule = new RModal(document.getElementById('schedule'), {
+                beforeOpen: function(next) {
+                    console.log('beforeOpen');
+                    next();
+                }
+                , afterOpen: function() {
+                    console.log('opened');
+                }
+
+                , beforeClose: function(next) {
+                    console.log('beforeClose');
+                    next();
+                }
+                , afterClose: function() {
+                    console.log('closed');
+                }
+            });
+
+            var doctorAdd = new RModal(document.getElementById('doctorAdd'), {
+                beforeOpen: function(next) {
+                    console.log('beforeOpen');
+                    next();
+                }
+                , afterOpen: function() {
+                    console.log('opened');
+                }
+
+                , beforeClose: function(next) {
+                    console.log('beforeClose');
+                    next();
+                }
+                , afterClose: function() {
+                    console.log('closed');
+                }
+            });
+
+            document.addEventListener('keydown', function(ev) {
+                schedule.keydown(ev);
+                doctorAdd.keydown(ev);
+            }, false);
+
+            var event =[];
+            event= document.getElementsByName('showSchedule');
+            for(var i=0;i<event.length;i++){
+                event[i].addEventListener("click", function(ev) {
+                    ev.preventDefault();
+                    schedule.open();
+                }, false);
+            }
+
+            document.getElementById('showAddDoctor').addEventListener("click", function(ev) {
+                ev.preventDefault();
+                doctorAdd.open();
+            }, false);
+
+            window.schedule = schedule;
+            window.doctorAdd=doctorAdd;
+        }
+        function getRowAndColumn(row) {
+            var row=row;
+            var col;
+            var rows=document.getElementById('scheduleleader').getElementsByTagName('tr');
+		    var cols;
+		    for(var i = 0; i < rows.length; i++) {
+            if(i == 0){
+                colsTH =rows[i].getElementsByTagName('th');
+                for(k = 0; k< colsTH.length; k++){
+					colsTH[k].onclick =function(){
+					    col=eval(this.cellIndex)
+                        var time=scheduleleader.rows[0].cells[col].innerHTML
+                        document.getElementById("schedule-time").value=time;
+                    }
+                }
+            }else{
+                cols =rows[i].getElementsByTagName('td');
+                for(var j = 0; j < cols.length; j++) {
+                    cols[j].onclick =function(){
+                        col=eval(this.cellIndex)
+                        var time=scheduleleader.rows[0].cells[col].innerHTML
+                        document.getElementById("schedule-time").value=time;
+                    }
+                }
+            }
+		    }
+            var scheduleleader=document.getElementById("scheduleleader")
+            var date=scheduleleader.rows[row].cells[0].innerHTML
+            document.getElementById("schedule-date").value=date;
+
+
+
+        }
+
+        function adddoctor(){
+
+            var tableDom = document.getElementById("doctorlist");
+            var rows = tableDom.rows;
+            var rowid = rows.length;
+
+            var obj = document.getElementById("doctor_select"); //定位id
+            var index = obj.selectedIndex; // 选中索引
+            var text = obj.options[index].text; // 选中文本     输出张三等汉字信息
+
+
+            var doctorname=text  //名字
+            var doctorid=document.getElementById("doctor_select").value;// id
+           // var medicinequantity=document.getElementById("med_quan").value;
+            //var medicinequantity1=document.getElementById("med_quan").innerHTML;
+            //console.log(doctorname);
+           //console.log(doctorid);
+
+            str=
+                    "<tr>"+
+                    "<td>"+rowid+"</td>"+
+                    "<td>"+doctorid+"</td>"+
+                    "<td>"+doctorname+"</td>"+
+                    "</tr>";
+            $("#add_doctor").append(str);
+
+        }
+
+        function addschedule(){
+
+            //var pid=document.getElementById("p_id").value
+           // console.log("patient:"+pid)
+
+            {#var tableDom = document.getElementById("medicinetable");#}
+            {#var rows = tableDom.rows;#}
+            {#var rowid = rows.length;#}
+            var date =document.getElementById("schedule-date").value;
+            var time =document.getElementById("schedule-time").value;
+            var mytable = document.getElementById("doctorlist");
+            var data_docid = [];
+
+            console.log(date);
+            console.log(time);
+
+            for(var i=1,rows=mytable.rows.length; i<rows; i++){
+                    data_docid[i-1] = mytable.rows[i].cells[1].innerHTML;
+            }
+            console.log(data_docid);
+
+             var data={
+                 'doctorlist': data_docid ,
+                 'date': date,
+                 'time':time
+            };
+            $.ajax({
+                url: "{{ url_for('doctor.addschedule') }}", //请求的url
+                type: 'post', //请求的方式
+                contentType: 'application/json; charset=UTF-8',
+                //data: $('#search').serialize(), //form表单里要提交的内容，里面的input等写上name就会提交，这是序列化
+                data: JSON.stringify(data),
+                //dataType : 'json',
+                error:function (data) {
+                    alert('查询失败');
+                    $("#add_doctor").html("")
+
+                },
+                success:function (data) {
+                  $("#add_doctor").html("")
+            }
+            });
+        }
+        function clean(){
+            $("#add_doctor").html("")
+        }
+
+    </script>
+</head>
+
+<body class="fix-header card-no-border fix-sidebar">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Hospital</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <div id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light">
+                <!-- ============================================================== -->
+                <!-- Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/home">
+                        <!-- Logo icon --><b>
+                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                            <!-- Dark Logo icon -->
+                            <img src="../../static/assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                            <!-- Light Logo icon -->
+                            <img src="../../static/assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text --><span>
+                         <!-- dark Logo text -->
+                         <img src="../../static/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                         <!-- Light Logo text -->
+                         <img src="../../static/assets/images/logo-light-text.png" class="light-logo" alt="homepage" /></span> </a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark" href="javascript:void(0)"><i class="fa fa-bars"></i></a> </li>
+                    </ul>
+                    <ul class="navbar-nav my-lg-0">
+                        <!-- ============================================================== -->
+                        <!-- Profile -->
+                        <!-- ============================================================== -->
+                        <div class="nav-item dropdown u-pro">
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href="{{ url_for('doctor.homepage') }}">{{ user.name }}</a>
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href="{{ url_for('auth.welcome') }}">Logout</a>
+
+                        </div>
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.homepage') }} aria-expanded="false"><i class="fa fa-tachometer"></i><span class="hide-menu">Home</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.profile') }} aria-expanded="false"><i class="fa fa-user-circle-o"></i><span class="hide-menu">Profile</span></a>
+                        </li>
+                        {% if user.position == 'Leader' %}
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.schedule') }} aria-expanded="false"><i class="fa fa-calendar"></i><span class="hide-menu">Schedule</span></a>
+                        </li>
+                        {% endif %}
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.myschedule') }} aria-expanded="false"><i class="fa fa-calendar-o"></i><span class="hide-menu">My Schedule</span></a>
+                         </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.reservationcheck') }} aria-expanded="false"><i class="fa fa-smile-o"></i><span class="hide-menu">Reservation</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('doctor.inpatientlist') }} aria-expanded="false"><i class="fa fa-check-square"></i><span class="hide-menu">Inpatient Check</span></a>
+                        </li>
+                    </ul>
+<!--                    <div class="text-center m-t-30">
+                        <a href="#" class="btn waves-effect waves-light btn-info hidden-md-down"> Upgrade to Pro</a>
+                    </div>-->
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-5 align-self-center">
+                        <h3 class="text-themecolor">Department Schedule</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">Department Schedule</li>
+                        </ol>
+                    </div><!--
+                    <div class="col-md-7 align-self-center">
+                        <a href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down"> Upgrade to Pro</a>
+                    </div>-->
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- column -->
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Department Schedule</h4>
+<!--                                <h6 class="card-subtitle">Add class <code>.table</code></h6-->
+                                <div class="table-responsive">
+                                    <table class="table" id="scheduleleader">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>8:00-9:00</th>
+                                                <th>9:00-10:00</th>
+                                                <th>10:00-11:00</th>
+                                                <th>11:00-12:00</th>
+                                                <th>14:00-15:00</th>
+                                                <th>15:00-16:00</th>
+                                                <th>16:00-17:00</th>
+                                                <th>17:00-18:00</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for date in dateInfo %}
+                                            <tr>
+                                                <td>{{date}}</td>
+                                                <td name="showSchedule" onclick="getRowAndColumn({{ loop.index }})"></td>
+                                                <td name="showSchedule" onclick="getRowAndColumn({{ loop.index }})"></td>
+                                                <td name="showSchedule" onclick="getRowAndColumn({{ loop.index }})"></td>
+                                                <td name="showSchedule" onclick="getRowAndColumn({{ loop.index }})"></td>
+                                                <td name="showSchedule" onclick="getRowAndColumn({{ loop.index }})"></td>
+                                                <td name="showSchedule" onclick="getRowAndColumn({{ loop.index }})"></td>
+                                                <td name="showSchedule" onclick="getRowAndColumn({{ loop.index }})"></td>
+                                                <td name="showSchedule" onclick="getRowAndColumn({{ loop.index }})"></td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="schedule" class="modal">
+                        <div class="modal-dialog animated">
+                            <div class="modal-content">
+                                ]
+                                    <div class="modal-header">
+                                        <strong>Schedule</strong>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div style="margin-bottom: 20px">
+                                                <label class="control-label col-xs-4" style="width:20%">
+                                                    Date:
+                                                </label>
+                                                <input type="text" name="schedule-date" id="schedule-date"
+                                                       class="form-control" style="width: 40%" readonly="readonly"/>
+                                            </div>
+                                            <div style="margin-bottom: 20px">
+                                                <label class="control-label col-xs-4" style="width:20%">
+                                                    Time:
+                                                </label>
+                                                <input type="text" name="schedule-time" id="schedule-time"
+                                                       class="form-control" style="width: 40%" readonly="readonly"/>
+                                            </div>
+                                            <div>
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <h4 class="card-title">Doctor List</h4>
+                                                        <div style="float: left;margin-bottom: 10px">
+                                                            <a id="showAddDoctor" href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down">
+                                                                Add Doctor
+                                                            </a>
+                                                        </div>
+                                                        <div class="table-responsive">
+
+                                                            <table id="doctorlist" class="table">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th style="width:10%">#</th>
+                                                                    <th style="width:20%">Doctor ID</th>
+                                                                    <th>Doctor Name</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody id="add_doctor">
+
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" type="button" onclick="schedule.close();clean();">Cancel</button>
+                                        <button class="btn btn-primary" style="background-color: #20aee3; border-color: #20aee3"  onclick="addschedule();schedule.close();clean();">Save</button>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="doctorAdd" class="modal">
+                        <div class="modal-dialog animated">
+                            <div class="modal-content">
+
+                                    <div class="modal-header">
+                                        <strong>Add Doctor</strong>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <div>
+                                                <label class="control-label col-xs-4" style="padding-top: 20px; width:20%">
+                                                    Doctor:
+                                                </label>
+                                                <select id="doctor_select" class="custom-select b-0" style="width: 40%">
+                                                    {% for doctor in doctorlist %}
+                                                         <option value="{{doctor.StaffID}}">{{doctor.name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" type="button" onclick="doctorAdd.close();">Cancel</button>
+                                        <button class="btn btn-primary" style="background-color: #20aee3; border-color: #20aee3" onclick="doctorAdd.close();adddoctor()">Save</button>
+                                    </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+     <script src="{{url_for('static', filename='assets/node_modules/jquery/jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/popper.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/bootstrap.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/perfect-scrollbar.jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/waves.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/sidebarmenu.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/custom.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/peity/jquery.peity.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/peity/jquery.peity.init.js')}}" ></script>
+{#    <script src="../../static/assets/node_modules/jquery/jquery.min.js"></script>#}
+{#    <!-- Bootstrap tether Core JavaScript -->#}
+{#    <script src="../../static/assets/node_modules/bootstrap/js/popper.min.js"></script>#}
+{#    <script src="../../static/assets/node_modules/bootstrap/js/bootstrap.min.js"></script>#}
+{#    <!-- slimscrollbar scrollbar JavaScript -->#}
+{#    <script src="../../static/html/js/perfect-scrollbar.jquery.min.js"></script>#}
+{#    <!--Wave Effects -->#}
+{#    <script src="../../static/html/js/waves.js"></script>#}
+{#    <!--Menu sidebar -->#}
+{#    <script src="../../static/html/js/sidebarmenu.js"></script>#}
+{#    <!--Custom JavaScript -->#}
+{#    <script src="../../static/html/js/custom.min.js"></script>#}
+{#    <!-- jQuery peity -->#}
+{#    <script src="../../static/assets/node_modules/peity/jquery.peity.min.js"></script>#}
+{#    <script src="../../static/assets/node_modules/peity/jquery.peity.init.js"></script>#}
+</body>
+
+</html>

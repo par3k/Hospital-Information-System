@@ -1,0 +1,53 @@
+{% extends "patient/pages-prescriptiondetail.html" %}
+{% block content %}
+                <div class="row page-titles">
+                    <div class="col-md-5 align-self-center">
+                        <h3 class="text-themecolor">Medicine Information</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href={{ url_for('patient.homepage') }}>Home</a></li>
+                            <li class="breadcrumb-item active">Medicine Information</li>
+                        </ol>
+                    </div>
+
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- column -->
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="table"  class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>MedicineID</th>
+                                                <th>Name</th>
+                                                <th>Price</th>
+                                                <th>Company</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for medicine in MedicineInfo %}
+                                            <tr>
+{#                                              <td>{{loop.index}}</td>#}
+                                                <td>{{ medicine.medicineID}}</td>
+                                                <td>{{ medicine.m_name}}</td>
+                                                <td>{{ medicine.price}}</td>
+                                                <td>{{ medicine.company}}</td>
+                                                <td>{{ medicine.description}}</td>
+                                            </tr>
+                                        {%endfor%}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+{% endblock %}

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static',filename='static/assets/images/favicon.png')}}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/bootstrap/css/bootstrap.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/perfect-scrollbar/css/perfect-scrollbar.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/morrisjs/morris.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/node_modules/c3-master/c3.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/style.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/pages/dashboard1.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='html/css/colors/default.css') }}"/>
+
+    {% if title %}
+        <title>HIS - {{ title }}</title>
+    {% else %}
+        <title>Hospital Information System</title>
+    {% endif %}
+</head>
+
+<main class="fix-header fix-sidebar card-no-border">
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== -->
+    <div class="preloader">
+        <div class="loader">
+            <div class="loader__figure"></div>
+            <p class="loader__label">Admin Wrap</p>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+    <main id="main-wrapper">
+        <!-- ============================================================== -->
+        <!-- Topbar header - style you can find in pages.scss -->
+        <!-- ============================================================== -->
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light">
+                <!-- ============================================================== -->
+                <!-- Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-header">
+                    <a class="navbar-brand" href={{ url_for('patient.homepage') }}>
+                        <!-- Logo icon --><b>
+                            <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                            <!-- Dark Logo icon -->
+                            <img src="../../static/assets/images/logo-icon.png" alt="homepage" class="dark-logo" />
+                            <!-- Light Logo icon -->
+                            <img src="../../static/assets/images/logo-light-icon.png" alt="homepage" class="light-logo" />
+                        </b>
+                        <!--End Logo icon -->
+                        <!-- Logo text --><span>
+                         <!-- dark Logo text -->
+                         <img src="../../static/assets/images/logo-text.png" alt="homepage" class="dark-logo" />
+                         <!-- Light Logo text -->
+                         <img src="../../static/assets/images/logo-light-text.png" class="light-logo" alt="homepage" /></span> </a>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Logo -->
+                <!-- ============================================================== -->
+                <div class="navbar-collapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item"> <a class="nav-link nav-toggler hidden-md-up waves-effect waves-dark" href="javascript:void(0)"><i class="fa fa-bars"></i></a> </li>
+                    </ul>
+                    <ul class="navbar-nav my-lg-0">
+                        <!-- ============================================================== -->
+                        <!-- Profile -->
+                        <!-- ============================================================== -->
+                        <div class="nav-item dropdown u-pro">
+                            {% if current_user.is_authenticated %}
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href={{ url_for('patient.patient_account') }}>{{ current_user.name }}</a>
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href={{ url_for('patient.patient_logout') }}>Logout</a>
+                            {% else %}
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href={{ url_for('patient.patient_register') }}>Register</a>
+                                <a class="nav-link dropdown-toggle waves-effect waves-dark " href={{ url_for('patient.patient_login') }}>Login</a>
+                            {% endif %}
+                        </div>
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <!-- ============================================================== -->
+        <!-- End Topbar header -->
+        <!-- ============================================================== -->
+        <!-- ============================================================== -->
+        <!-- Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+        <aside class="left-sidebar">
+            <!-- Sidebar scroll-->
+            <div class="scroll-sidebar">
+                <!-- Sidebar navigation-->
+                <nav class="sidebar-nav">
+                    <ul id="sidebarnav">
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('patient.homepage') }} aria-expanded="false"><i class="fa  fa-hospital-o"></i><span class="hide-menu">Home</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('patient.doctorinfo') }} aria-expanded="false"><i class="fa fa-user-md"></i><span class="hide-menu">Doctor Information</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('patient.reservation') }} aria-expanded="false"><i class="fa fa-table"></i><span class="hide-menu">Reservation</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('patient.prescriptiondetail') }} aria-expanded="false"><i class="fa fa-medkit"></i><span class="hide-menu">Prescription</span></a>
+                        </li>
+                        <li> <a class="waves-effect waves-dark" href={{ url_for('patient.priceinfo') }} aria-expanded="false"><i class="fa fa-money"></i><span class="hide-menu">Price Information</span></a>
+                        </li>
+
+                        <br>
+
+                    </ul>
+
+                </nav>
+                <!-- End Sidebar navigation -->
+            </div>
+            <!-- End Sidebar scroll-->
+        </aside>
+        <!-- ============================================================== -->
+        <!-- End Left Sidebar - style you can find in sidebar.scss  -->
+        <!-- ============================================================== -->
+
+        <!-- ============================================================== -->
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+<div style="margin: auto">
+    <div class="row page-titles">
+        <div class="col-md-5 align-self-center">
+            <h3 class="text-themecolor">Doctor Information</h3>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href={{ url_for('patient.homepage') }}>Home</a></li>
+                <li class="breadcrumb-item active">Doctor Information</li>
+            </ol>
+        </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Start Page Content -->
+    <!-- ============================================================== -->
+    <div class="row">
+        <!-- column -->
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                  <div class="table-responsive">
+                        <table class="table">
+                                <div class="d-flex m-b-30 no-block" style="float : left">
+                                    <h5 class="card-title m-b-0 align-self-center">Department : </h5>
+                                    <form method="post">
+                                        <div class="ml-auto">
+                                            <select name="search_department" class="custom-select" style="border: 0">
+                                                <option value="The whole Staff">The whole Staff</option>
+                                                <option value="Ophthalmology">Ophthalmology</option>
+                                                <option value="Dermatology">Dermatology</option>
+                                                <option value="Internal medicine">Internal medicine</option>
+                                                <option value="Dentistry">Dentistry</option>
+                                                <option value="Surgery">Surgery</option>
+                                            </select>
+                                        </div>
+                                        <button href="#" class="btn waves-effect waves-light btn btn-info pull-right hidden-sm-down" style="font-size: 15px">Search</button>
+                                    </form>
+                                </div>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>Position</th>
+                                    <th>Gender</th>
+                                    <th>officeNo</th>
+                                </tr>
+                            </thead>
+                                <tbody>
+                                {% for doctor in DoctorInfo %}
+                                    <tr>
+                                        <td>{{ loop.index }}</td>
+                                        <td>{{ doctor.name }}</td>
+                                        <td>{{ doctor.departmentName }}</td>
+                                        <td>{{ doctor.position }}</td>
+                                        <td>{{ doctor.gender }}</td>
+                                        <td>{{ doctor.officeNo }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    </main>
+     <script src="{{url_for('static', filename='assets/node_modules/jquery/jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/popper.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/bootstrap/js/bootstrap.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/perfect-scrollbar.jquery.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/waves.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/sidebarmenu.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/custom.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/raphael/raphael-min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/morrisjs/morris.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/d3/d3.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='assets/node_modules/c3-master/c3.min.js')}}" ></script>
+     <script src="{{url_for('static', filename='html/js/dashboard1.js')}}" ></script>
+
+</main>
+</html>
+

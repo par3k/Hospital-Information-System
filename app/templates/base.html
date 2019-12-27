@@ -1,70 +1,29 @@
-{% extends "bootstrap/base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+     {% if title %}
+        <title>{{ title }} - 博客</title>
+        {% else %}
+        <title>欢迎来到博客!</title>
+        {% endif %}
+    </head>
+    <body>
+       <div>博客 :
+           <a href="/index">首页</a>
+           <a href="/login">登录</a>
+       </div>
+       <hr>
+       {% with messages = get_flashed_messages() %}
+           {% if messages %}
+            <ur>
+                {% for message in messages %}
+                    <li>{{ message }}</li>>
+                {% endfor %}
+            </ur>
+           {% endif %}
+       {% endwith %}
 
-{% block title %}医院信息管理系统{% endblock %}
-
-{% block head %}
-{{ super() }}
-<link rel="shortcut icon" href="{{ url_for('static', filename = 'favicon.ico') }}"
-    type="image/x-icon">
-<link rel="icon" href="{{ url_for('static', filename = 'favicon.ico') }}"
-    type="image/x-icon">
-{% endblock %}
-
-{% block navbar %}
-<div class="navbar navbar-inverse" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="{{ url_for('main.index') }}">医院信息管理系统</a>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                {% if auth.ismenzhen %}
-                <li><a href="{{ url_for('outpatient.opindex')}}">门诊模块</a></li>
-                {% endif %}
-                {% if auth.iszhuyuan %}
-                <li><a href="{{ url_for('inpatient.index')}}">住院模块</a></li>
-                {% endif %}
-                {% if auth.shoufei %}
-                <li><a href="{{ url_for('charges.index')}}">收费模块</a></li>
-                {% endif %}
-                {% if auth.jizhen %}
-                <li><a href="{{ url_for('imgpatient.checkin')}}">急诊模块</a></li>
-                {% endif %}
-                {% if auth.jiating %}
-                <li><a href="{{ url_for('familydoctor.index')}}">家庭医生模块</a></li>
-                {% endif %}
-                {% if auth.isguahao %}
-                {% if auth.ismenzhen %}
-                <li><a href="{{ url_for('main.patientinfo') }}">病人信息登记</a></li>
-                {% endif %}
-                {% endif %}
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                {% if name %}
-                <li><a>您好，{{name}}医生</a></li>
-                <li><a href="{{ url_for('auth.logout') }}">登出</a></li>
-                {% else %}
-                <li><a href="{{ url_for('auth.login') }}">登录</a></li>
-                {% endif %}
-            </ul>
-        </div>
-    </div>
-</div>
-{% endblock %}
-
-{% block content %}
-<div class="container">
-    {% for message in get_flashed_messages() %}
-    <div class="alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        {{ message }}
-    </div>
-    {% endfor %}
-    {% block page_content %}{% endblock %}
-</div>
-{% endblock %}
-
-{% block scripts %}
-{{ super() }}
-{% endblock %}
+        {% block content %}  {% endblock %}
+    </body>
+</html>

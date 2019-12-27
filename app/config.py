@@ -1,27 +1,15 @@
-import os
-
-
-class Config:
+class Config(object):
     # 这边进行自定义
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
+    # SECRET_KEY = os.environ.get('SECRET_KEY') or 'hard to guess string'
+    SECRET_KEY = '184172410'
+    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://dbgroup:DBgroup2019.@175.24.44.2/hsp'
+    #SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:darihan.@localhost/hsp'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
-    FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
-    PORT = 8080
-
-    @staticmethod
-    def init_app(app):
-        pass
-
-
-class DevelopmentConfig(Config):
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    CSRF_ENABLED = True
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get(
-        # 'DEV_DATABASE_URL') or 'mysql+pymysql://root:gxy151o11A@localhost/hsp'  # 高夕毓的不用删，之后都用注释就行了
-        'DEV_DATABASE_URL') or 'mysql+pymysql://root:ghlwo7831@localhost/hsp'  # 后面自己填写连接数据库
-        # 'DEV_DATABASE_URL') or 'mysql+pymysql://root:123456@localhost/hsp'  # 后面自己填写连接数据库
+    #
+    # @staticmethod
+    # def init_app(app):
+    #     pass
 
-
-config = {
-    'development': DevelopmentConfig,
-    'default': DevelopmentConfig
-}
